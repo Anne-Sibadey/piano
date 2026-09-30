@@ -66,6 +66,7 @@ export interface ScheduleEvent {
   type: EventType;
   notes?: string;
   roomOrLocation?: string;
+  auto?: boolean; // cours généré automatiquement
 }
 
 export interface ContactInquiry {

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { supabase } from './utils/supabase';
 import { loadPublicSettings, loadPrivateData, saveKey, insertInquiry, updateInquiry } from './utils/storage';
 import { initialTeacherSettings } from './data/initialData';
+import { generateYear, toISO } from './utils/schoolCalendar';
 import { 
   Student, PedagogicalLog, ScheduleEvent, 
   ContactInquiry, TeacherSettings 
@@ -178,6 +179,13 @@ export default function App() {
     setScheduleEvents(prev => prev.filter(e => e.id !== eventId));
   };
 
+  const handleGenerateYear = () => {
+    if (!window.confirm("Générer les cours de l'année à partir d'aujourd'hui pour tous les élèves actifs ?\n\nLes cours générés automatiquement à partir de cette date seront recréés. Les cours que vous avez saisis ou modifiés à la main sont conservés.")) return;
+    const r = generateYear(students, scheduleEvents, toISO(new Date()));
+    setScheduleEvents(r.events);
+    window.alert(`${r.created} cours générés.` + (r.skipped.length ? `\n\nCréneau non reconnu pour : ${r.skipped.join(', ')}.\nÉcrivez-le par exemple « Mercredi 14h30 » dans la fiche élève.` : ''));
+  };
+
   // Inquiry operations
   const handleNewPublicInquiry = (inq: ContactInquiry) => {
     insertInquiry(inq);
@@ -296,6 +304,7 @@ export default function App() {
             <CalendarView
               events={scheduleEvents}
               students={students}
+              onGenerateYear={handleGenerateYear}
               onOpenNewEvent={(date) => {
                 setEventToEdit(null);
                 setPreselectedDateForEvent(date);

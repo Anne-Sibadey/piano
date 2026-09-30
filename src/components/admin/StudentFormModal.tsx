@@ -371,7 +371,7 @@ export const StudentFormModal: React.FC<StudentFormModalProps> = ({
                 </label>
                 <input
                   type="text"
-                  placeholder="Ex. Mercredi 14h30 - 15h15"
+                  placeholder="Ex. Mercredi 14h30 (jour + heure de début)"
                   value={formData.habitualSlot}
                   onChange={(e) => setFormData({ ...formData, habitualSlot: e.target.value })}
                   className="w-full px-3 py-2 text-sm bg-[#FAF8F5] border border-[#D8D1C7] rounded-xl"

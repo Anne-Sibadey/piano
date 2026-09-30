@@ -4,6 +4,7 @@ import {
   Clock, User, MapPin, Filter 
 } from 'lucide-react';
 import { ScheduleEvent, Student, EventType } from '../../types';
+import { dayOffReason } from '../../utils/schoolCalendar';
 
 interface CalendarViewProps {
   events: ScheduleEvent[];
@@ -11,6 +12,7 @@ interface CalendarViewProps {
   onOpenNewEvent: (date?: string) => void;
   onEditEvent: (event: ScheduleEvent) => void;
   onSelectStudent: (student: Student) => void;
+  onGenerateYear?: () => void;
 }
 
 export const CalendarView: React.FC<CalendarViewProps> = ({
@@ -18,7 +20,8 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
   students,
   onOpenNewEvent,
   onEditEvent,
-  onSelectStudent
+  onSelectStudent,
+  onGenerateYear
 }) => {
   const [viewMode, setViewMode] = useState<'week' | 'month'>('week');
   const [currentDate, setCurrentDate] = useState(new Date('2026-10-05')); // Default to a Monday week
@@ -109,6 +112,15 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
 
         {/* Action button */}
         <div className="flex items-center gap-2.5">
+          {onGenerateYear && (
+            <button
+              onClick={onGenerateYear}
+              className="inline-flex items-center gap-2 px-4 py-2.5 text-xs sm:text-sm font-medium text-[#1E1B18] bg-white hover:bg-[#FAF8F5] border border-[#D5C7B0] rounded-xl transition-all"
+            >
+              <CalendarIcon className="w-4 h-4 text-[#B0824B]" />
+              <span>Générer les cours de l'année</span>
+            </button>
+          )}
           <button
             onClick={() => onOpenNewEvent()}
             className="inline-flex items-center gap-2 px-4 py-2.5 text-xs sm:text-sm font-medium text-white bg-[#1E1B18] hover:bg-[#342F2B] active:scale-[0.99] rounded-xl shadow-sm transition-all"
@@ -201,12 +213,16 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
           {weekDays.map((day) => {
             const dateStr = day.toISOString().split('T')[0];
             const dayEvents = filteredEvents.filter(e => e.date === dateStr);
+            const offReason = dayOffReason(dateStr);
 
             return (
               <div 
                 key={dateStr} 
-                className="p-3 flex flex-col justify-between bg-white/70 hover:bg-[#FAF8F5]/50 transition-colors relative min-h-[160px] md:min-h-0"
+                className={`p-3 flex flex-col justify-between hover:bg-[#FAF8F5]/50 transition-colors relative min-h-[160px] md:min-h-0 ${offReason ? 'bg-[#F3EFEA]' : 'bg-white/70'}`}
               >
+                {offReason && (
+                  <div className="text-[10px] uppercase tracking-wide text-[#8A8275] mb-1">{offReason}</div>
+                )}
                 {/* Events list for this day */}
                 <div className="space-y-2.5">
                   {dayEvents.length > 0 ? (
