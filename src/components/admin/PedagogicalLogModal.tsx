@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { X, Save, BookOpen, Music, CheckCircle2 } from 'lucide-react';
 import { Student, PedagogicalLog } from '../../types';
+import { toISO } from '../../utils/schoolCalendar';
 
 interface PedagogicalLogModalProps {
   isOpen: boolean;
@@ -21,7 +22,7 @@ export const PedagogicalLogModal: React.FC<PedagogicalLogModalProps> = ({
     preselectedStudentId || (students.length > 0 ? students[0].id : '')
   );
 
-  const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
+  const [date, setDate] = useState(toISO(new Date()));
   const [durationMinutes, setDurationMinutes] = useState(45);
   const [piecesInput, setPiecesInput] = useState('');
   const [conceptsCovered, setConceptsCovered] = useState('');

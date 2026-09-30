@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Calendar as CalendarIcon, ChevronLeft, ChevronRight, Plus, 
   Clock, User, MapPin, Filter 
@@ -58,6 +58,11 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
 }) => {
   const [viewMode, setViewMode] = useState<'week' | 'month'>('week');
   const [currentDate, setCurrentDate] = useState(new Date());
+  const [now, setNow] = useState(new Date());
+  useEffect(() => {
+    const t = setInterval(() => setNow(new Date()), 60000);
+    return () => clearInterval(t);
+  }, []);
   const [typeFilter, setTypeFilter] = useState<'all' | 'courses' | 'vacation' | 'absence'>('all');
 
   // Compute start of current week (Monday)
@@ -267,6 +272,11 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
                   {SLOTS.map((m) => (
                     <div key={m} className={`absolute inset-x-0 border-t ${m % 60 === 0 ? 'border-[#E8E2D8]' : 'border-[#F1EDE6]'}`} style={{ top: y(m) }} />
                   ))}
+                  {dateStr === toISO(now) && now.getHours() * 60 + now.getMinutes() >= START && now.getHours() * 60 + now.getMinutes() <= END && (
+                    <div className="absolute inset-x-0 z-20 border-t-2 border-red-500 pointer-events-none" style={{ top: y(now.getHours() * 60 + now.getMinutes()) }}>
+                      <span className="absolute -left-1 -top-[5px] w-2 h-2 rounded-full bg-red-500" />
+                    </div>
+                  )}
                   {layout(dayEvents).map(({ e, s, en, lane, lanes }) => {
                     const top = Math.min(y(Math.max(s, START)), y(END) - 22);
                     const h = Math.max((Math.min(en, END) - Math.max(s, START)) * PX, 22);

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { X, Save, Calendar, Clock, User, Trash2 } from 'lucide-react';
 import { ScheduleEvent, Student, EventType } from '../../types';
+import { toISO } from '../../utils/schoolCalendar';
 
 interface ScheduleEventModalProps {
   isOpen: boolean;
@@ -23,7 +24,7 @@ export const ScheduleEventModal: React.FC<ScheduleEventModalProps> = ({
 }) => {
   const [studentId, setStudentId] = useState('');
   const [title, setTitle] = useState('');
-  const [date, setDate] = useState(preselectedDate || new Date().toISOString().split('T')[0]);
+  const [date, setDate] = useState(preselectedDate || toISO(new Date()));
   const [startTime, setStartTime] = useState('14:30');
   const [durationMinutes, setDurationMinutes] = useState(45);
   const [type, setType] = useState<EventType>('course_45');
@@ -43,7 +44,7 @@ export const ScheduleEventModal: React.FC<ScheduleEventModalProps> = ({
     } else {
       setStudentId('');
       setTitle('Cours de piano');
-      setDate(preselectedDate || new Date().toISOString().split('T')[0]);
+      setDate(preselectedDate || toISO(new Date()));
       setStartTime('14:30');
       setDurationMinutes(45);
       setType('course_45');

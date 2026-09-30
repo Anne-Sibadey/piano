@@ -227,7 +227,7 @@ export default function App() {
         email: inquiry.email
       } : undefined,
       level: inquiry.level,
-      startDate: new Date().toISOString().split('T')[0],
+      startDate: toISO(new Date()),
       formula: formulaKey as any,
       pricePerYear: '[À RENSEIGNER]',
       paymentStatus: 'up_to_date',
@@ -240,7 +240,7 @@ export default function App() {
       observations: `Âge indiqué : ${inquiry.age}`,
       absencesCount: 0,
       status: 'active',
-      createdAt: new Date().toISOString().split('T')[0]
+      createdAt: toISO(new Date())
     });
 
     setStudentFormModalOpen(true);

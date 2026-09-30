@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Users, Calendar, Clock, AlertCircle, Plus, BookOpen, 
   ArrowRight, CheckCircle2, ChevronRight, MessageSquare 
@@ -33,20 +33,42 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   const pendingPayments = students.filter(s => s.paymentStatus === 'pending');
   const newInquiries = inquiries.filter(i => i.status === 'new');
   
-  // Heures de cours de la semaine en cours (lundi au dimanche)
-  const today = new Date();
-  const monday = new Date(today.getFullYear(), today.getMonth(), today.getDate() - ((today.getDay() + 6) % 7));
+  // Heure courante, rafraîchie chaque minute
+  const [now, setNow] = useState(new Date());
+  useEffect(() => {
+    const t = setInterval(() => setNow(new Date()), 60000);
+    return () => clearInterval(t);
+  }, []);
+
+  const at = (date: string, time: string) => {
+    const [y, m, dd] = date.split('-').map(Number);
+    const [hh, mm] = (time || '0:0').split(':').map(Number);
+    return new Date(y, m - 1, dd, hh, mm || 0);
+  };
+  const endOf = (e: ScheduleEvent) =>
+    e.endTime ? at(e.date, e.endTime) : new Date(at(e.date, e.startTime).getTime() + (e.durationMinutes || 0) * 60000);
+
+  // Heures de cours restantes d'ici dimanche (à partir de maintenant, cours en cours inclus au prorata)
+  const monday = new Date(now.getFullYear(), now.getMonth(), now.getDate() - ((now.getDay() + 6) % 7));
   const sunday = new Date(monday);
   sunday.setDate(monday.getDate() + 6);
-  const weekMinutes = scheduleEvents
-    .filter(e => e.type.startsWith('course') && e.date >= toISO(monday) && e.date <= toISO(sunday))
-    .reduce((sum, e) => sum + (e.durationMinutes || 0), 0);
+  const weekMinutes = Math.round(
+    scheduleEvents
+      .filter(e => e.type.startsWith('course') && e.date >= toISO(monday) && e.date <= toISO(sunday))
+      .reduce((sum, e) => {
+        const start = at(e.date, e.startTime);
+        const end = endOf(e);
+        const from = start > now ? start : now;
+        return sum + Math.max(0, (end.getTime() - from.getTime()) / 60000);
+      }, 0)
+  );
   const weekHoursLabel = weekMinutes % 60 === 0
     ? `${weekMinutes / 60} h`
     : `${Math.floor(weekMinutes / 60)} h ${String(weekMinutes % 60).padStart(2, '0')}`;
 
-  // Sort events by date & time
-  const upcomingEvents = [...scheduleEvents]
+  // Événements à venir : ceux qui ne sont pas encore terminés (jour ET heure)
+  const upcomingEvents = scheduleEvents
+    .filter(e => endOf(e) > now)
     .sort((a, b) => (a.date + a.startTime).localeCompare(b.date + b.startTime))
     .slice(0, 5);
 
@@ -126,14 +148,14 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           className="p-5 bg-white rounded-xl border border-[#E8E2D8] hover:border-[#D5C7B0] cursor-pointer transition-all hover:shadow-sm"
         >
           <div className="flex items-center justify-between text-[#7A7369] mb-2">
-            <span className="text-xs font-medium">Heures/semaine</span>
+            <span className="text-xs font-medium">Heures restantes</span>
             <Calendar className="w-4 h-4 text-[#B0824B]" />
           </div>
           <div className="font-serif-display text-3xl font-semibold text-[#1E1B18] tabular-nums">
             {weekHoursLabel}
           </div>
           <div className="text-[11px] text-[#8A8275] mt-1 flex items-center justify-between">
-            <span>Du lundi au dimanche</span>
+            <span>Jusqu'à dimanche</span>
             <span className="text-[#B0824B] hover:underline">Calendrier →</span>
           </div>
         </div>
@@ -209,10 +231,10 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                     <div className="flex items-start gap-3">
                       <div className="w-12 h-12 rounded-lg bg-[#FAF3EA] border border-[#E8DFC8] flex flex-col items-center justify-center text-center shrink-0">
                         <span className="text-[10px] text-[#7A7369] font-medium uppercase leading-tight">
-                          {new Date(evt.date).toLocaleDateString('fr-FR', { weekday: 'short' })}
+                          {new Date(evt.date + 'T12:00:00').toLocaleDateString('fr-FR', { weekday: 'short' })}
                         </span>
                         <span className="font-serif-display font-bold text-sm text-[#1E1B18] leading-tight">
-                          {new Date(evt.date).getDate()}
+                          {new Date(evt.date + 'T12:00:00').getDate()}
                         </span>
                       </div>
                       <div>

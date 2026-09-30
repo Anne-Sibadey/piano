@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { X, Save, User, Clock, CreditCard, Music, Sparkles } from 'lucide-react';
 import { Student, LessonDuration, PaymentStatus } from '../../types';
+import { toISO } from '../../utils/schoolCalendar';
 
 interface StudentFormModalProps {
   isOpen: boolean;
@@ -28,7 +29,7 @@ export const StudentFormModal: React.FC<StudentFormModalProps> = ({
     parentPhone: '',
     parentEmail: '',
     level: 'Débutant (1ère année)',
-    startDate: new Date().toISOString().split('T')[0],
+    startDate: toISO(new Date()),
     formula: '45min' as LessonDuration,
     pricePerYear: '[À RENSEIGNER]',
     paymentStatus: 'up_to_date' as PaymentStatus,
@@ -84,7 +85,7 @@ export const StudentFormModal: React.FC<StudentFormModalProps> = ({
         parentPhone: '',
         parentEmail: '',
         level: 'Débutant',
-        startDate: new Date().toISOString().split('T')[0],
+        startDate: toISO(new Date()),
         formula: '45min',
         pricePerYear: '[À RENSEIGNER]',
         paymentStatus: 'up_to_date',
@@ -145,7 +146,7 @@ export const StudentFormModal: React.FC<StudentFormModalProps> = ({
       observations: formData.observations.trim(),
       absencesCount: studentToEdit ? studentToEdit.absencesCount : 0,
       status: formData.status,
-      createdAt: studentToEdit ? studentToEdit.createdAt : new Date().toISOString().split('T')[0]
+      createdAt: studentToEdit ? studentToEdit.createdAt : toISO(new Date())
     };
 
     onSave(studentToSave);
