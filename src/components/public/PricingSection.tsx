@@ -72,9 +72,6 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
                     <div className="font-serif-display text-3xl font-semibold text-[#1E1B18] tracking-tight">
                       {formula.annualPrice}
                     </div>
-                    <div className="text-[11px] text-[#8A8275] mt-1">
-                      Possibilité de règlement en 3 trimestres ou 10 mensualités
-                    </div>
                   </div>
 
                   <p className="text-xs text-[#5A544D] leading-relaxed mb-6">
@@ -127,11 +124,7 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
               <p className="text-xs sm:text-sm text-[#5A544D] leading-relaxed">
                 Le tarif annuel correspond à l'ensemble des cours dispensés de septembre à juin (hors vacances scolaires). Il comprend la réservation inconditionnelle de votre créneau hebdomadaire, la préparation individualisée de chaque séance, le prêt ou la fourniture de partitions choisies, ainsi que l'accès au suivi pédagogique continu.
               </p>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2 text-xs text-[#6A635B]">
-                <div className="p-3 bg-[#FAF8F5] rounded-lg border border-[#F0EBE2]">
-                  <span className="font-medium text-[#1E1B18] block mb-0.5">Facilités de paiement</span>
-                  Paiement en 1, 3 ou 10 fois sans aucuns frais supplémentaires.
-                </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 text-xs text-[#6A635B]">
                 <div className="p-3 bg-[#FAF8F5] rounded-lg border border-[#F0EBE2]">
                   <span className="font-medium text-[#1E1B18] block mb-0.5">Premier contact</span>
                   Une première séance d'échange et d'évaluation sans engagement.

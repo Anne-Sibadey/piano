@@ -139,7 +139,7 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
             Emploi du Temps
           </h2>
           <p className="text-xs sm:text-sm text-[#7A7369] mt-0.5">
-            Planning hebdomadaire des cours et gestion des créneaux de l'atelier
+            Planning hebdomadaire des cours et gestion des créneaux de la salle de cours
           </p>
         </div>
 

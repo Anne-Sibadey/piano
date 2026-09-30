@@ -57,7 +57,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
 
             <div className="p-6 bg-white rounded-xl border border-[#E8E2D8] space-y-3">
               <h4 className="text-xs font-semibold uppercase tracking-wider text-[#4A443E]">
-                Engagements de l'atelier
+                Mes engagements
               </h4>
               <div className="space-y-2 text-xs text-[#5A544D]">
                 <div className="flex items-center gap-2">

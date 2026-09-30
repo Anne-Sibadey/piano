@@ -27,7 +27,7 @@ export const Footer: React.FC<FooterProps> = ({
           {/* Brand & Mission */}
           <div className="md:col-span-5 space-y-4">
             <span className="font-serif-display text-2xl font-normal tracking-tight text-white block">
-              Atelier Piano
+              Cours de Piano
             </span>
             <p className="text-xs sm:text-sm text-[#A8A196] leading-relaxed max-w-sm font-light">
               Enseignement du piano personnalisé, bienveillant et exigeant. Un accompagnement sur-mesure pour enfants, adolescents et adultes au cœur de {settings.city || '[Ville]'}.
@@ -70,10 +70,10 @@ export const Footer: React.FC<FooterProps> = ({
           {/* Contact Coordinates */}
           <div className="md:col-span-4 space-y-3">
             <h4 className="text-xs font-semibold uppercase tracking-wider text-[#DFC79D]">
-              Atelier & Contact
+              Contact
             </h4>
             <div className="space-y-2 text-xs text-[#A8A196]">
-              <p>{settings.address || "[Adresse du studio à renseigner]"}</p>
+              <p>{settings.address || "[Adresse à renseigner]"}</p>
               <p>{settings.city || "[Ville & Code postal]"}</p>
               <p className="pt-1 text-white">{settings.phone || "+33 (0)6 [À renseigner]"}</p>
               <p>{settings.email || "contact@[mon-domaine-piano].fr"}</p>
@@ -86,7 +86,7 @@ export const Footer: React.FC<FooterProps> = ({
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#7A7369]">
           
           <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
-            <span>© {new Date().getFullYear()} Atelier Piano. Tous droits réservés.</span>
+            <span>© {new Date().getFullYear()} Cours de Piano. Tous droits réservés.</span>
             <button
               onClick={() => onOpenLegal('cgu')}
               className="hover:text-[#A8A196] transition-colors underline-offset-4 hover:underline"

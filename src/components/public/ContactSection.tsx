@@ -284,7 +284,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
             {/* Contact Card */}
             <div className="p-8 bg-white rounded-2xl border border-[#E8E2D8] shadow-sm space-y-6">
               <h3 className="font-serif-display text-2xl text-[#1E1B18] font-medium">
-                Coordonnées de l'Atelier
+                Coordonnées
               </h3>
               
               <div className="space-y-4 text-sm text-[#5A544D]">
@@ -292,7 +292,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                   <MapPin className="w-5 h-5 text-[#B0824B] shrink-0 mt-0.5" />
                   <div>
                     <span className="font-medium text-[#1E1B18] block">Adresse du studio :</span>
-                    <span>{settings.address || "[Adresse de l'atelier de piano à renseigner]"}</span>
+                    <span>{settings.address || "[Adresse à renseigner]"}</span>
                     <span className="block text-xs text-[#8A8275] mt-0.5">{settings.city || "[Ville]"}</span>
                   </div>
                 </div>

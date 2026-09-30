@@ -28,7 +28,7 @@ export const ScheduleEventModal: React.FC<ScheduleEventModalProps> = ({
   const [durationMinutes, setDurationMinutes] = useState(45);
   const [type, setType] = useState<EventType>('course_45');
   const [notes, setNotes] = useState('');
-  const [location, setLocation] = useState('Atelier de piano');
+  const [location, setLocation] = useState('Salle de piano');
 
   useEffect(() => {
     if (eventToEdit) {
@@ -39,7 +39,7 @@ export const ScheduleEventModal: React.FC<ScheduleEventModalProps> = ({
       setDurationMinutes(eventToEdit.durationMinutes);
       setType(eventToEdit.type);
       setNotes(eventToEdit.notes || '');
-      setLocation(eventToEdit.roomOrLocation || 'Atelier de piano');
+      setLocation(eventToEdit.roomOrLocation || 'Salle de piano');
     } else {
       setStudentId('');
       setTitle('Cours de piano');
@@ -48,7 +48,7 @@ export const ScheduleEventModal: React.FC<ScheduleEventModalProps> = ({
       setDurationMinutes(45);
       setType('course_45');
       setNotes('');
-      setLocation('Atelier de piano');
+      setLocation('Salle de piano');
     }
   }, [eventToEdit, preselectedDate, isOpen]);
 
@@ -248,7 +248,7 @@ export const ScheduleEventModal: React.FC<ScheduleEventModalProps> = ({
                 type="text"
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
-                placeholder="Atelier de piano"
+                placeholder="Salle de piano"
                 className="w-full px-3 py-2 text-sm bg-[#FAF8F5] border border-[#D8D1C7] rounded-xl"
               />
             </div>

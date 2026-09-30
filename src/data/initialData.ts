@@ -6,7 +6,7 @@ export const initialTeacherSettings: TeacherSettings = {
   tagline: "Une approche vivante, personnalisée et exigeante du piano pour tous les âges.",
   email: "contact@[mon-domaine-piano].fr",
   phone: "+33 (0)6 [À renseigner]",
-  address: "[Adresse de l'atelier / studio de piano]",
+  address: "[Adresse de la salle de cours]",
   city: "[Ville]",
   shortBio: "Pianiste et pédagogue passionné(e), j'accompagne depuis plusieurs années des élèves de tous horizons — enfants, adolescents et adultes — avec une approche fondée sur l'écoute, le plaisir du jeu et une technique libérée de toute rigidité.",
   musicalJourney: "[Détails de votre parcours musical à renseigner : études, formation, maîtres, pratique instrumentale et répertoire de prédilection...]",
@@ -264,7 +264,7 @@ export const initialScheduleEvents: ScheduleEvent[] = [
     durationMinutes: 60,
     type: 'course_60',
     notes: 'Nocturne Chopin & Jazz',
-    roomOrLocation: 'Atelier de piano'
+    roomOrLocation: 'Salle de piano'
   },
   {
     id: 'evt-2',
@@ -277,7 +277,7 @@ export const initialScheduleEvents: ScheduleEvent[] = [
     durationMinutes: 45,
     type: 'course_45',
     notes: 'Sonatine Clementi',
-    roomOrLocation: 'Atelier de piano'
+    roomOrLocation: 'Salle de piano'
   },
   {
     id: 'evt-3',
@@ -290,7 +290,7 @@ export const initialScheduleEvents: ScheduleEvent[] = [
     durationMinutes: 45,
     type: 'course_45',
     notes: 'Bach Prélude',
-    roomOrLocation: 'Atelier de piano'
+    roomOrLocation: 'Salle de piano'
   },
   {
     id: 'evt-4',
@@ -303,7 +303,7 @@ export const initialScheduleEvents: ScheduleEvent[] = [
     durationMinutes: 30,
     type: 'course_30',
     notes: 'Danse de l\'Ours & Rythme',
-    roomOrLocation: 'Atelier de piano'
+    roomOrLocation: 'Salle de piano'
   },
   {
     id: 'evt-5',

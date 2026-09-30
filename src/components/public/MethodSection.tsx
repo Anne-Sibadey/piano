@@ -3,33 +3,6 @@ import { IMAGES } from '../../assets/images';
 import { Sparkles, UserCheck, BookOpen, Ear, Layers, Sun } from 'lucide-react';
 
 export const MethodSection: React.FC = () => {
-  const comparisonAspects = [
-    {
-      title: "Personnalisation & écoute",
-      text: "L'apprentissage s'adapte à vos goûts, vos aspirations et vos contraintes d'agenda, sans programme imposé uniforme."
-    },
-    {
-      title: "Choix du répertoire",
-      text: "Vous participez activement au choix des œuvres : grands classiques, musiques de films, jazz, musiques contemporaines ou pièces néo-classiques."
-    },
-    {
-      title: "Théorie musicale incarnée",
-      text: "La compréhension du solfège et des accords est immédiatement rattachée à vos morceaux, pour que chaque notion prenne du sens sous vos doigts."
-    },
-    {
-      title: "Travail de l'oreille & musicalité",
-      text: "Développement de l'écoute intérieure, de la justesse rythmique et de la sensibilité au timbre, avant même la lecture purement visuelle."
-    },
-    {
-      title: "Geste pianistique & décontraction",
-      text: "Recherche d'un geste naturel et délié, utilisant le poids du bras pour éviter toute crispation ou fatigue musculaire."
-    },
-    {
-      title: "Autonomie & plaisir durable",
-      text: "Vous apprenez comment travailler sereinement chez vous, pour devenir rapidement autonome et conserver l'envie de jouer toute votre vie."
-    }
-  ];
-
   const targetAudiences = [
     {
       badge: "Tous âges",
@@ -37,12 +10,12 @@ export const MethodSection: React.FC = () => {
       description: "Pour celles et ceux qui n'ont jamais touché un piano ou lu une note. Une méthode progressive qui vous fait jouer dès la première séance, sans prérequis rébarbatifs."
     },
     {
-      badge: "Dès 6-7 ans",
+      badge: "De 6 à 10 ans",
       title: "Enfants",
       description: "Un éveil stimulant et joyeux où le jeu, le chant et la coordination se rencontrent. Les bases solides se construisent dans la valorisation et l'encouragement constant."
     },
     {
-      badge: "11-17 ans",
+      badge: "11 à 17 ans",
       title: "Adolescents",
       description: "Un espace d'expression artistique valorisant. Possibilité d'aborder des musiques actuelles, du jazz ou des bandes originales, tout en consolidant les acquis techniques."
     },
@@ -54,7 +27,7 @@ export const MethodSection: React.FC = () => {
     {
       badge: "Après une pause",
       title: "Reprise du Piano",
-      description: "Vous avez fait du piano il y a quelques années (ou décennies) et souhaitez renouer avec l'instrument ? Nous libérons les blocages passés pour retrouver le pur bonheur de jouer."
+      description: "Vous avez fait du piano il y a quelques années (ou décennies) et souhaitez renouer avec l'instrument ? Je vous aide à lever les blocages passés pour retrouver le plaisir de jouer."
     }
   ];
 
@@ -69,10 +42,10 @@ export const MethodSection: React.FC = () => {
             <span>Philosophie d'enseignement</span>
           </div>
           <h2 className="font-serif-display text-3xl sm:text-4xl lg:text-5xl text-[#1E1B18] font-normal tracking-tight text-balance">
-            Une approche vivante, exigeante et libérée de la rigidité académique
+            Un entre-deux exigeant : ni conservatoire, ni simple loisir
           </h2>
           <p className="mt-4 text-base sm:text-lg text-[#5A544D] leading-relaxed font-light">
-            Les conservatoires et écoles institutionnelles accomplissent un travail formidable pour former les futurs professionnels. Mon atelier propose une alternative complémentaire : une formation rigoureuse et bienveillante, dédiée à celles et ceux qui souhaitent faire de la musique un plaisir intime, épanouissant et sur-mesure.
+            Le conservatoire forme avec talent de futurs musiciens, dans un cadre normé et très exigeant. Mon enseignement s’en distingue sans être relâché : un cours de piano n’est pas une récréation. L’apprentissage y est sérieux, structuré et professionnel, mais la méthode s’adapte à chaque profil (enfant, adolescent, adulte, débutant ou en reprise) pour que chacun progresse réellement, avec plaisir.
           </p>
         </div>
 
@@ -128,43 +101,12 @@ export const MethodSection: React.FC = () => {
                   « Le piano n'est pas un meuble d'exercices, c'est un orchestre sous dix doigts. Le secret réside dans le plaisir de la résonance. »
                 </blockquote>
                 <p className="text-xs text-[#8A8275] mt-2">
-                  — Note de philosophie pédagogique de l'atelier
+                  — Ma conception de l'enseignement
                 </p>
               </div>
             </div>
           </div>
 
-        </div>
-
-        {/* 6 Core Aspects Grid */}
-        <div className="mb-24">
-          <div className="mb-8">
-            <h3 className="font-serif-display text-2xl sm:text-3xl text-[#1E1B18]">
-              Les 6 axes de notre travail au piano
-            </h3>
-            <p className="text-sm text-[#6A635B] mt-1">
-              Des piliers clairs pour une progression équilibrée sans surcharge cognitive.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {comparisonAspects.map((aspect, idx) => (
-              <div
-                key={aspect.title}
-                className="p-6 bg-white rounded-xl border border-[#E8E2D8] hover:border-[#D5C7B0] transition-colors"
-              >
-                <div className="text-xs font-semibold text-[#B0824B] tracking-wider mb-2">
-                  0{idx + 1}
-                </div>
-                <h4 className="font-serif-display text-lg text-[#1E1B18] font-medium mb-2">
-                  {aspect.title}
-                </h4>
-                <p className="text-sm text-[#5A544D] leading-relaxed">
-                  {aspect.text}
-                </p>
-              </div>
-            ))}
-          </div>
         </div>
 
         {/* Target Audience Section: "À qui s'adressent ces cours ?" */}
@@ -202,6 +144,10 @@ export const MethodSection: React.FC = () => {
               </div>
             ))}
           </div>
+
+          <p className="mt-8 text-sm text-[#6A635B] max-w-2xl mx-auto text-center">
+            Les cours sont proposés à partir de 6 ans : avant cet âge, l'enfant est en général trop jeune pour un apprentissage régulier du piano.
+          </p>
         </div>
 
       </div>

@@ -54,7 +54,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             Tableau de Bord
           </h2>
           <p className="text-xs sm:text-sm text-[#7A7369] mt-0.5">
-            Bienvenue dans votre atelier de gestion pédagogique et administrative.
+            Bienvenue dans votre espace de gestion pédagogique et administrative.
           </p>
         </div>
 

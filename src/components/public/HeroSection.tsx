@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowRight, Music, HeartHandshake, Compass, CheckCircle2 } from 'lucide-react';
+import { ArrowRight, CheckCircle2 } from 'lucide-react';
 import { IMAGES } from '../../assets/images';
 import { TeacherSettings } from '../../types';
 
@@ -34,7 +34,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             </h1>
 
             <p className="text-lg sm:text-xl text-[#5A544D] leading-relaxed max-w-2xl font-light">
-              Des cours particuliers attentifs et stimulants, conçus pour les enfants, les adolescents et les adultes. Une alternative vivante au cadre académique traditionnel, où la rigueur technique sert toujours l’émotion musicale.
+              Des cours particuliers exigeants et bienveillants, pour les enfants dès 6 ans, les adolescents et les adultes. Un entre-deux entre le conservatoire et le loisir : le sérieux d’un enseignement structuré, la souplesse d’une méthode adaptée à chaque profil.
             </p>
 
             {/* CTAs */}
@@ -45,6 +45,13 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               >
                 <span>Découvrir les cours</span>
                 <ArrowRight className="w-4 h-4 text-[#DFC79D]" />
+              </button>
+
+              <button
+                onClick={() => document.querySelector('#a-propos')?.scrollIntoView({ behavior: 'smooth' })}
+                className="inline-flex items-center justify-center gap-2 px-7 py-3.5 text-base font-medium text-[#1E1B18] bg-transparent hover:bg-[#F2ECE3] border border-[#D8D1C7] rounded-xl transition-colors"
+              >
+                <span>Découvrir la professeure</span>
               </button>
 
               <button
@@ -59,11 +66,11 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             <div className="pt-4 border-t border-[#E8E2D8] flex flex-wrap items-center gap-y-2 gap-x-6 text-xs text-[#7A7369]">
               <div className="flex items-center gap-1.5">
                 <CheckCircle2 className="w-4 h-4 text-[#B0824B]" />
-                <span>Atelier privé à {settings.city || '[Ville]'}</span>
+                <span>Salle de cours privée à {settings.city || '[Ville]'}</span>
               </div>
               <div className="flex items-center gap-1.5">
                 <CheckCircle2 className="w-4 h-4 text-[#B0824B]" />
-                <span>Piano à queue acoustique</span>
+                <span>Piano acoustique</span>
               </div>
               <div className="flex items-center gap-1.5">
                 <CheckCircle2 className="w-4 h-4 text-[#B0824B]" />
@@ -78,7 +85,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             <div className="relative mx-auto max-w-lg lg:max-w-none rounded-2xl overflow-hidden border border-[#E8E2D8] shadow-lg bg-[#EFE9DF]">
               <img
                 src={IMAGES.hero}
-                alt="Piano à queue dans l'atelier lumineux"
+                alt="Piano dans une salle de cours lumineuse"
                 referrerPolicy="no-referrer"
                 className="w-full aspect-[4/3] lg:aspect-[3/4] object-cover hover:scale-[1.02] transition-transform duration-700 ease-out"
               />
@@ -96,88 +103,55 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
         </div>
 
-        {/* 6 Key Pedagogical Pillars Grid */}
+        {/* 4 piliers */}
         <div className="mt-20 pt-14 border-t border-[#E8E2D8]">
           <div className="text-center max-w-3xl mx-auto mb-12">
             <h2 className="font-serif-display text-3xl sm:text-4xl text-[#1E1B18] font-normal">
-              Les piliers d'un apprentissage harmonieux
+              Quatre piliers pour apprendre solidement
             </h2>
             <p className="text-[#6A635B] mt-2 text-base font-light">
-              Une pédagogie conçue pour faire grandir chaque musicien avec plaisir, confiance et régularité.
+              Une pédagogie structurée et bienveillante, pour progresser avec plaisir et régularité.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <div className="p-6 bg-white rounded-xl border border-[#E8E2D8] transition-all hover:border-[#D5C7B0] hover:shadow-sm">
-              <div className="w-10 h-10 rounded-lg bg-[#FAF3EA] flex items-center justify-center text-[#B0824B] mb-4">
-                <Music className="w-5 h-5" />
-              </div>
+              <div className="text-xs font-semibold text-[#B0824B] tracking-wider mb-3">01</div>
               <h3 className="font-serif-display text-xl text-[#1E1B18] font-medium mb-2">
                 Morceaux choisis avec l'élève
               </h3>
               <p className="text-sm text-[#5A544D] leading-relaxed">
-                Le répertoire abordé est construit en concertation : classique, musiques de films, jazz ou variété. La motivation naît du morceau que l’on a hâte de jouer.
+                Le répertoire est construit en concertation : classique, musiques de films, jazz ou variété. La motivation naît du morceau que l’on a hâte de jouer.
               </p>
             </div>
 
             <div className="p-6 bg-white rounded-xl border border-[#E8E2D8] transition-all hover:border-[#D5C7B0] hover:shadow-sm">
-              <div className="w-10 h-10 rounded-lg bg-[#FAF3EA] flex items-center justify-center text-[#B0824B] mb-4">
-                <Compass className="w-5 h-5" />
-              </div>
-              <h3 className="font-serif-display text-xl text-[#1E1B18] font-medium mb-2">
-                Progression sur-mesure
-              </h3>
-              <p className="text-sm text-[#5A544D] leading-relaxed">
-                Aucun examen éliminatoire ni classement compétitif. Chaque élève évolue à son rythme personnel, selon ses disponibilités et ses objectifs de vie.
-              </p>
-            </div>
-
-            <div className="p-6 bg-white rounded-xl border border-[#E8E2D8] transition-all hover:border-[#D5C7B0] hover:shadow-sm">
-              <div className="w-10 h-10 rounded-lg bg-[#FAF3EA] flex items-center justify-center text-[#B0824B] mb-4">
-                <HeartHandshake className="w-5 h-5" />
-              </div>
-              <h3 className="font-serif-display text-xl text-[#1E1B18] font-medium mb-2">
-                Approche humaine & bienveillante
-              </h3>
-              <p className="text-sm text-[#5A544D] leading-relaxed">
-                Une pédagogie active sans crispation ni jugement. L'erreur est vue comme une étape normale et constructive de la découverte sonore.
-              </p>
-            </div>
-
-            <div className="p-6 bg-white rounded-xl border border-[#E8E2D8] transition-all hover:border-[#D5C7B0] hover:shadow-sm">
-              <div className="w-10 h-10 rounded-lg bg-[#FAF3EA] flex items-center justify-center text-[#B0824B] mb-4">
-                <span className="font-serif-display font-bold text-lg">04</span>
-              </div>
+              <div className="text-xs font-semibold text-[#B0824B] tracking-wider mb-3">02</div>
               <h3 className="font-serif-display text-xl text-[#1E1B18] font-medium mb-2">
                 Théorie intégrée à la pratique
               </h3>
               <p className="text-sm text-[#5A544D] leading-relaxed">
-                Pas de cours théoriques de solfège déconnectés du piano. La lecture, le rythme et l'harmonie sont directement appris sur le clavier avec les doigts et les oreilles.
+                Pas de cours de solfège déconnecté du piano. La lecture, le rythme et l'harmonie s'apprennent directement sur le clavier, avec les doigts et les oreilles.
               </p>
             </div>
 
             <div className="p-6 bg-white rounded-xl border border-[#E8E2D8] transition-all hover:border-[#D5C7B0] hover:shadow-sm">
-              <div className="w-10 h-10 rounded-lg bg-[#FAF3EA] flex items-center justify-center text-[#B0824B] mb-4">
-                <span className="font-serif-display font-bold text-lg">05</span>
-              </div>
-              <h3 className="font-serif-display text-xl text-[#1E1B18] font-medium mb-2">
-                Développement de l'autonomie
-              </h3>
-              <p className="text-sm text-[#5A544D] leading-relaxed">
-                L'objectif fondamental est de vous apprendre à travailler chez vous efficacement, à comprendre comment surmonter une difficulté et à déchiffrer en toute liberté.
-              </p>
-            </div>
-
-            <div className="p-6 bg-white rounded-xl border border-[#E8E2D8] transition-all hover:border-[#D5C7B0] hover:shadow-sm">
-              <div className="w-10 h-10 rounded-lg bg-[#FAF3EA] flex items-center justify-center text-[#B0824B] mb-4">
-                <span className="font-serif-display font-bold text-lg">06</span>
-              </div>
+              <div className="text-xs font-semibold text-[#B0824B] tracking-wider mb-3">03</div>
               <h3 className="font-serif-display text-xl text-[#1E1B18] font-medium mb-2">
                 Suivi pédagogique continu
               </h3>
               <p className="text-sm text-[#5A544D] leading-relaxed">
-                Des objectifs clairs définis d'une semaine sur l'autre, avec des conseils de méthode précis pour vos séances personnelles et un point d'étape régulier.
+                Des objectifs clairs d'une semaine sur l'autre, des conseils de méthode précis pour le travail à la maison et un point d'étape régulier.
+              </p>
+            </div>
+
+            <div className="p-6 bg-white rounded-xl border border-[#E8E2D8] transition-all hover:border-[#D5C7B0] hover:shadow-sm">
+              <div className="text-xs font-semibold text-[#B0824B] tracking-wider mb-3">04</div>
+              <h3 className="font-serif-display text-xl text-[#1E1B18] font-medium mb-2">
+                Progression sur-mesure
+              </h3>
+              <p className="text-sm text-[#5A544D] leading-relaxed">
+                Chaque élève avance à son rythme, selon son âge, ses disponibilités et ses objectifs, avec un enseignement sérieux et adapté à son profil.
               </p>
             </div>
 

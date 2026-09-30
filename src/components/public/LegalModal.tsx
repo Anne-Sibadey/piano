@@ -110,7 +110,7 @@ export const LegalModal: React.FC<LegalModalProps> = ({
                     3. Organisation des cours
                   </h4>
                   <p>
-                    Les cours particuliers sont dispensés à l'atelier situé au [Adresse du studio] selon la formule convenue (30 minutes, 45 minutes ou 1 heure hebdomadaire). L'élève s'engage à respecter la ponctualité des séances afin de ne pas empiéter sur le cours suivant.
+                    Les cours particuliers sont dispensés à la salle de cours située au [Adresse] selon la formule convenue (30 minutes, 45 minutes ou 1 heure hebdomadaire). L'élève s'engage à respecter la ponctualité des séances afin de ne pas empiéter sur le cours suivant.
                   </p>
                 </section>
 
@@ -233,7 +233,7 @@ export const LegalModal: React.FC<LegalModalProps> = ({
                 Politique de Confidentialité & Traitement des Données (RGPD)
               </h4>
               <p>
-                Le respect de votre vie privée et de vos données personnelles est une priorité absolue au sein de l'Atelier de Piano.
+                Le respect de votre vie privée et de vos données personnelles est une priorité absolue dans le cadre de mon activité d'enseignement du piano.
               </p>
               <div className="space-y-3">
                 <p>

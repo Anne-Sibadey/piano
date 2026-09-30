@@ -370,7 +370,7 @@ export default function App() {
 
             <MethodSection />
 
-            <CoursesSection />
+            <CoursesSection city={settings.city} />
 
             <PricingSection
               settings={settings}

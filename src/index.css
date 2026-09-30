@@ -39,3 +39,11 @@ body {
   background: #B8B0A2;
 }
 
+
+@layer base {
+  section p,
+  section blockquote {
+    text-align: justify;
+    hyphens: auto;
+  }
+}

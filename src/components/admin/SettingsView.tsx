@@ -153,7 +153,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
 
           <div>
             <label className="block text-xs font-medium text-[#3A3530] mb-1">
-              Adresse de l'Atelier
+              Adresse de la salle de cours
             </label>
             <input
               type="text"

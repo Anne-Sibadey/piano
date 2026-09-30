@@ -49,7 +49,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
       <div className="md:hidden flex items-center justify-between px-4 py-3 bg-white border-b border-[#E8E2D8] sticky top-0 z-30">
         <div className="flex items-center gap-2">
           <span className="font-serif-display font-medium text-lg text-[#1E1B18]">
-            Atelier Piano
+            Cours de Piano
           </span>
           <span className="text-[10px] px-2 py-0.5 bg-[#FAF3EA] text-[#B0824B] rounded-full border border-[#E8DFC8] font-medium">
             Admin
@@ -74,7 +74,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
           {/* Logo / Brand Header */}
           <div className="p-6 border-b border-[#E8E2D8]">
             <span className="font-serif-display text-xl font-medium text-[#1E1B18] block">
-              Atelier Piano
+              Cours de Piano
             </span>
             <div className="flex items-center gap-1.5 mt-1">
               <span className="w-2 h-2 rounded-full bg-emerald-500"></span>

@@ -49,7 +49,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             }}
           >
             <span className="font-serif-display text-2xl sm:text-3xl font-medium tracking-tight text-[#1E1B18] group-hover:text-[#B0824B] transition-colors">
-              Atelier Piano
+              Cours de Piano
             </span>
           </a>
 
