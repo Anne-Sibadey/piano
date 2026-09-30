@@ -30,7 +30,7 @@ export const Footer: React.FC<FooterProps> = ({
               Cours de Piano
             </span>
             <p className="text-xs sm:text-sm text-[#A8A196] leading-relaxed max-w-sm font-light">
-              Enseignement du piano personnalisé, bienveillant et exigeant. Un accompagnement sur-mesure pour enfants, adolescents et adultes au cœur de {settings.city || '[Ville]'}.
+              Enseignement du piano personnalisé, bienveillant et exigeant. Un accompagnement sur-mesure pour enfants, adolescents et adultes au cœur d'{settings.city || '[Ville]'}.
             </p>
             <div className="pt-2 text-xs text-[#7A7369]">
               Piano d'expression acoustique · Tous répertoires
