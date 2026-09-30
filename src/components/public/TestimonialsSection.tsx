@@ -44,7 +44,7 @@ export const TestimonialsSection: React.FC = () => {
             <div key={item.name} className="p-8 bg-white rounded-2xl border border-[#E8E2D8] flex flex-col justify-between hover:border-[#D5C7B0] transition-colors">
               <div>
                 <Quote className="w-8 h-8 text-[#B0824B]/30 mb-4" />
-                <p className="font-serif-display text-lg text-[#3A3530] italic leading-relaxed mb-6">
+                <p className="font-serif-display text-xl font-medium text-[#3A3530] leading-relaxed mb-6">
                   {item.quote}
                 </p>
               </div>

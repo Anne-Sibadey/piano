@@ -325,15 +325,13 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                 </h4>
               </div>
               <p className="text-xs sm:text-sm text-[#5A544D] leading-relaxed">
-                Les cours ont lieu du lundi au samedi sur rendez-vous individuel :
+                Les cours ont lieu sur rendez-vous individuel :
               </p>
               <ul className="text-xs text-[#5A544D] space-y-1.5 pt-1">
-                <li>• <strong>Lundi, Mardi, Jeudi, Vendredi :</strong> 14h00 – 20h30</li>
-                <li>• <strong>Mercredi :</strong> 09h00 – 19h30 (créneaux enfants & adultes)</li>
-                <li>• <strong>Samedi :</strong> 09h00 – 15h00</li>
+                <li>• <strong>Lundi au vendredi :</strong> 8h00 – 20h00</li>
               </ul>
               <div className="pt-2 text-[11px] text-[#7A7369] italic">
-                * Les créneaux de fin de journée (après 17h30) et du mercredi après-midi sont rapidement complets. N'hésitez pas à vous manifester en amont de la rentrée.
+                * Les créneaux de fin de journée (après 17h30) sont rapidement complets. N'hésitez pas à vous manifester en amont de la rentrée.
               </div>
             </div>
 

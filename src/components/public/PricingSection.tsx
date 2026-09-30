@@ -124,14 +124,10 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
               <p className="text-xs sm:text-sm text-[#5A544D] leading-relaxed">
                 Le tarif annuel correspond à l'ensemble des cours dispensés de septembre à juin (hors vacances scolaires). Il comprend la réservation inconditionnelle de votre créneau hebdomadaire, la préparation individualisée de chaque séance, le prêt ou la fourniture de partitions choisies, ainsi que l'accès au suivi pédagogique continu.
               </p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 text-xs text-[#6A635B]">
+              <div className="grid grid-cols-1 gap-4 pt-2 text-xs text-[#6A635B]">
                 <div className="p-3 bg-[#FAF8F5] rounded-lg border border-[#F0EBE2]">
                   <span className="font-medium text-[#1E1B18] block mb-0.5">Premier contact</span>
                   Une première séance d'échange et d'évaluation sans engagement.
-                </div>
-                <div className="p-3 bg-[#FAF8F5] rounded-lg border border-[#F0EBE2]">
-                  <span className="font-medium text-[#1E1B18] block mb-0.5">Ajustement du créneau</span>
-                  Possibilité de faire évoluer le jour ou l'horaire en cours d'année.
                 </div>
               </div>
             </div>
