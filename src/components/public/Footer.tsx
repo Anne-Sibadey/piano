@@ -86,12 +86,12 @@ export const Footer: React.FC<FooterProps> = ({
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#7A7369]">
           
           <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
-            <span>© {new Date().getFullYear()} Cours de Piano. Tous droits réservés.</span>
+            <span>© {new Date().getFullYear()} Anne Sibadey – Cours de piano. Tous droits réservés.</span>
             <button
               onClick={() => onOpenLegal('cgu')}
               className="hover:text-[#A8A196] transition-colors underline-offset-4 hover:underline"
             >
-              Conditions Générales
+              Conditions d'utilisation
             </button>
             <button
               onClick={() => onOpenLegal('mentions')}

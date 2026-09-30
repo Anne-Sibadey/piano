@@ -478,6 +478,7 @@ export default function App() {
         isOpen={legalModalOpen}
         onClose={() => setLegalModalOpen(false)}
         defaultTab={legalModalTab}
+        settings={settings}
       />
 
     </div>

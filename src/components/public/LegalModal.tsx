@@ -1,265 +1,168 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { X, FileText, Shield, Scale } from 'lucide-react';
+import { TeacherSettings } from '../../types';
+
+type Tab = 'cgu' | 'mentions' | 'privacy';
 
 interface LegalModalProps {
   isOpen: boolean;
   onClose: () => void;
-  defaultTab?: 'cgu' | 'mentions' | 'privacy';
+  defaultTab?: Tab;
+  settings: TeacherSettings;
 }
 
-export const LegalModal: React.FC<LegalModalProps> = ({
-  isOpen,
-  onClose,
-  defaultTab = 'cgu'
-}) => {
-  const [activeTab, setActiveTab] = useState<'cgu' | 'mentions' | 'privacy'>(defaultTab);
+// N'affiche une coordonnée que si elle est réellement renseignée (pas un texte entre crochets).
+const ok = (v?: string) => !!v && v.trim() !== '' && !v.includes('[');
+
+const Block: React.FC<{ title: string; children: React.ReactNode }> = ({ title, children }) => (
+  <section className="space-y-1.5">
+    <h4 className="font-serif-display text-lg font-semibold text-[#1E1B18]">{title}</h4>
+    <div className="space-y-2">{children}</div>
+  </section>
+);
+
+export const LegalModal: React.FC<LegalModalProps> = ({ isOpen, onClose, defaultTab = 'mentions', settings }) => {
+  const [activeTab, setActiveTab] = useState<Tab>(defaultTab);
+  useEffect(() => { setActiveTab(defaultTab); }, [defaultTab, isOpen]);
 
   if (!isOpen) return null;
 
+  const tabs: { id: Tab; label: string; icon: React.ReactNode }[] = [
+    { id: 'mentions', label: 'Mentions légales', icon: <Scale className="w-4 h-4" /> },
+    { id: 'privacy', label: 'Politique de confidentialité', icon: <Shield className="w-4 h-4" /> },
+    { id: 'cgu', label: "Conditions d'utilisation", icon: <FileText className="w-4 h-4" /> },
+  ];
+
+  const contactLine = ok(settings.email) ? settings.email : null;
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
       <div className="bg-white w-full max-w-4xl max-h-[90vh] rounded-2xl shadow-2xl border border-[#E8E2D8] flex flex-col overflow-hidden">
-        
-        {/* Modal Header */}
+
         <div className="px-6 py-4 border-b border-[#E8E2D8] flex items-center justify-between bg-[#FAF8F5]">
           <div className="flex items-center gap-2">
             <Scale className="w-5 h-5 text-[#B0824B]" />
-            <h3 className="font-serif-display text-xl text-[#1E1B18] font-medium">
-              Informations Légales & Contractuelles
-            </h3>
+            <h3 className="font-serif-display text-xl text-[#1E1B18] font-medium">Informations légales</h3>
           </div>
-          <button
-            onClick={onClose}
-            className="p-1.5 text-[#7A7369] hover:text-[#1E1B18] hover:bg-[#F2ECE3] rounded-lg transition-colors"
-          >
+          <button onClick={onClose} className="p-1.5 text-[#7A7369] hover:text-[#1E1B18] hover:bg-[#F2ECE3] rounded-lg transition-colors">
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        {/* Tab Selection */}
-        <div className="flex border-b border-[#E8E2D8] bg-[#FAF8F5] px-6 gap-2 pt-2">
-          <button
-            onClick={() => setActiveTab('cgu')}
-            className={`flex items-center gap-2 pb-3 px-3 text-xs sm:text-sm font-medium border-b-2 transition-all ${
-              activeTab === 'cgu'
-                ? 'border-[#B0824B] text-[#1E1B18] font-semibold'
-                : 'border-transparent text-[#7A7369] hover:text-[#1E1B18]'
-            }`}
-          >
-            <FileText className="w-4 h-4" />
-            <span>Conditions Générales</span>
-          </button>
-
-          <button
-            onClick={() => setActiveTab('mentions')}
-            className={`flex items-center gap-2 pb-3 px-3 text-xs sm:text-sm font-medium border-b-2 transition-all ${
-              activeTab === 'mentions'
-                ? 'border-[#B0824B] text-[#1E1B18] font-semibold'
-                : 'border-transparent text-[#7A7369] hover:text-[#1E1B18]'
-            }`}
-          >
-            <Scale className="w-4 h-4" />
-            <span>Mentions Légales</span>
-          </button>
-
-          <button
-            onClick={() => setActiveTab('privacy')}
-            className={`flex items-center gap-2 pb-3 px-3 text-xs sm:text-sm font-medium border-b-2 transition-all ${
-              activeTab === 'privacy'
-                ? 'border-[#B0824B] text-[#1E1B18] font-semibold'
-                : 'border-transparent text-[#7A7369] hover:text-[#1E1B18]'
-            }`}
-          >
-            <Shield className="w-4 h-4" />
-            <span>Politique de Confidentialité</span>
-          </button>
+        <div className="flex flex-wrap border-b border-[#E8E2D8] bg-[#FAF8F5] px-6 gap-2 pt-2">
+          {tabs.map((t) => (
+            <button
+              key={t.id}
+              onClick={() => setActiveTab(t.id)}
+              className={`flex items-center gap-2 pb-3 px-3 text-xs sm:text-sm font-medium border-b-2 transition-all ${
+                activeTab === t.id ? 'border-[#B0824B] text-[#1E1B18] font-semibold' : 'border-transparent text-[#7A7369] hover:text-[#1E1B18]'
+              }`}
+            >
+              {t.icon}
+              <span>{t.label}</span>
+            </button>
+          ))}
         </div>
 
-        {/* Modal Scrollable Content */}
-        <div className="flex-1 overflow-y-auto p-6 sm:p-8 space-y-6 text-[#4A443E] text-xs sm:text-sm leading-relaxed">
-          
-          {/* TAB 1: CGU (All 13 user sections) */}
-          {activeTab === 'cgu' && (
-            <div className="space-y-6">
-              <div className="p-4 bg-[#FAF3EA] border border-[#E0D5C3] rounded-xl text-xs text-[#7A7369]">
-                <strong className="text-[#1E1B18]">Note de précaution légale : </strong>
-                Ce document constitue une trame indicative organisée selon les rubriques usuelles de l'enseignement musical libéral. Les clauses entre crochets [ ] doivent être validées et personnalisées conformément à votre statut juridique et fiscal.
-              </div>
+        <div className="flex-1 overflow-y-auto p-6 sm:p-8 space-y-6 text-[#4A443E] text-sm leading-relaxed">
 
-              <div className="space-y-4">
-                <section>
-                  <h4 className="font-serif-display text-base font-semibold text-[#1E1B18] mb-1">
-                    1. Objet
-                  </h4>
-                  <p>
-                    Les présentes Conditions Générales régissent les modalités d'enseignement du piano dispensé par [Nom / Raison Sociale de l'Enseignant], ci-après dénommé « le Professeur », à toute personne inscrite ou représentée légalement, ci-après dénommée « l'Élève ».
-                  </p>
-                </section>
-
-                <section>
-                  <h4 className="font-serif-display text-base font-semibold text-[#1E1B18] mb-1">
-                    2. Inscription
-                  </h4>
-                  <p>
-                    L'inscription devient définitive après validation du créneau horaire hebdomadaire et réception du dossier d'inscription complété, ainsi que des modalités de règlement convenues.
-                  </p>
-                </section>
-
-                <section>
-                  <h4 className="font-serif-display text-base font-semibold text-[#1E1B18] mb-1">
-                    3. Organisation des cours
-                  </h4>
-                  <p>
-                    Les cours particuliers sont dispensés à la salle de cours située au [Adresse] selon la formule convenue (30 minutes, 45 minutes ou 1 heure hebdomadaire). L'élève s'engage à respecter la ponctualité des séances afin de ne pas empiéter sur le cours suivant.
-                  </p>
-                </section>
-
-                <section>
-                  <h4 className="font-serif-display text-base font-semibold text-[#1E1B18] mb-1">
-                    4. Engagement annuel
-                  </h4>
-                  <p>
-                    L'adhésion aux cours de piano implique un engagement pour l'année scolaire en cours (de septembre à juin), garantissant la continuité pédagogique et la réservation exclusive du créneau hebdomadaire.
-                  </p>
-                </section>
-
-                <section>
-                  <h4 className="font-serif-display text-base font-semibold text-[#1E1B18] mb-1">
-                    5. Paiement
-                  </h4>
-                  <p>
-                    Le montant annuel est fixé selon la formule choisie : [Tarif annuel à renseigner]. Le paiement peut être échelonné en [1, 3 ou 10 versements] par [virement bancaire / chèques / prélèvement]. Tout trimestre entamé reste dû dans son intégralité.
-                  </p>
-                </section>
-
-                <section>
-                  <h4 className="font-serif-display text-base font-semibold text-[#1E1B18] mb-1">
-                    6. Absences de l'élève
-                  </h4>
-                  <p>
-                    Toute absence doit être signalée au moins [48 heures à l'avance]. Dans la mesure des disponibilités du professeur et du planning hebdomadaire, un créneau de report pourra être envisagé. Tout cours annulé sans prévenance dans ce délai sera réputé dû et ne donnera lieu à aucun remboursement.
-                  </p>
-                </section>
-
-                <section>
-                  <h4 className="font-serif-display text-base font-semibold text-[#1E1B18] mb-1">
-                    7. Absences du professeur
-                  </h4>
-                  <p>
-                    En cas d'absence exceptionnelle du professeur (maladie, cas de force majeure), les cours non dispensés feront l'objet d'un rattrapage programmé d'un commun accord ou, à défaut, d'un avoir ou d'un remboursement proportionnel.
-                  </p>
-                </section>
-
-                <section>
-                  <h4 className="font-serif-display text-base font-semibold text-[#1E1B18] mb-1">
-                    8. Vacances scolaires
-                  </h4>
-                  <p>
-                    Les cours ne sont pas dispensés pendant les vacances scolaires de la zone [Zone académique A / B / C], sauf organisation spécifique de stages optionnels d'approfondissement sur inscription préalable.
-                  </p>
-                </section>
-
-                <section>
-                  <h4 className="font-serif-display text-base font-semibold text-[#1E1B18] mb-1">
-                    9. Résiliation
-                  </h4>
-                  <p>
-                    En cas de motif impérieux et légitime (déménagement longue distance, raison médicale attestée rendant la pratique impossible), le contrat pourra être résilié moyennant un préavis écrit d'un mois [Modalités de préavis et de calcul à valider].
-                  </p>
-                </section>
-
-                <section>
-                  <h4 className="font-serif-display text-base font-semibold text-[#1E1B18] mb-1">
-                    10. Responsabilités
-                  </h4>
-                  <p>
-                    Pour les élèves mineurs, la responsabilité du professeur est engagée exclusivement pendant la durée effective de la séance à l'intérieur du studio. Les parents sont tenus de s'assurer de la présence du professeur avant de laisser leur enfant.
-                  </p>
-                </section>
-
-                <section>
-                  <h4 className="font-serif-display text-base font-semibold text-[#1E1B18] mb-1">
-                    11. Données personnelles
-                  </h4>
-                  <p>
-                    Les informations recueillies sont nécessaires à la gestion administrative des cours et au suivi pédagogique de l'élève. Conformément à la législation RGPD, elles ne font l'objet d'aucune cession commerciale à des tiers.
-                  </p>
-                </section>
-
-                <section>
-                  <h4 className="font-serif-display text-base font-semibold text-[#1E1B18] mb-1">
-                    12. Droit à l'image
-                  </h4>
-                  <p>
-                    Toute captation audio ou vidéo réalisée lors des cours ou des auditions annuelles ne pourra être partagée ou publiée qu'après recueil de l'accord exprès de l'élève ou de ses représentants légaux.
-                  </p>
-                </section>
-
-                <section>
-                  <h4 className="font-serif-display text-base font-semibold text-[#1E1B18] mb-1">
-                    13. Modification des conditions générales
-                  </h4>
-                  <p>
-                    Le professeur se réserve le droit de modifier les présentes conditions générales à chaque rentrée scolaire. Les élèves en seront informés au moins 30 jours avant leur entrée en vigueur.
-                  </p>
-                </section>
-              </div>
-            </div>
-          )}
-
-          {/* TAB 2: Mentions Légales */}
           {activeTab === 'mentions' && (
-            <div className="space-y-4">
-              <h4 className="font-serif-display text-lg font-semibold text-[#1E1B18]">
-                Mentions Légales du Site
-              </h4>
-              <div className="space-y-3">
-                <p><strong>Éditeur du site :</strong> [Nom et prénom du professeur / Raison sociale]</p>
-                <p><strong>Statut juridique :</strong> [Micro-entreprise / Profession libérale / Association — À renseigner]</p>
-                <p><strong>Numéro SIRET :</strong> [Numéro SIRET à 14 chiffres à renseigner]</p>
-                <p><strong>Adresse de domiciliation :</strong> [Adresse complète du studio ou siège]</p>
-                <p><strong>Directeur de la publication :</strong> [Nom du professeur]</p>
-                <p><strong>Contact :</strong> contact@[mon-domaine-piano].fr | +33 6 [À renseigner]</p>
-                <p><strong>Hébergement du site :</strong> Hébergé sur infrastructure cloud sécurisée [Nom de l'hébergeur et coordonnées à renseigner]</p>
-                <p><strong>Propriété intellectuelle :</strong> L'ensemble des textes, photographies, éléments graphiques et maquettes présents sur ce site sont la propriété exclusive de l'éditeur ou font l'objet d'une licence d'exploitation réservée.</p>
-              </div>
-            </div>
+            <>
+              <Block title="Éditrice du site">
+                <p>Ce site est édité par <strong>Anne Sibadey</strong>, enseignante de piano (cours particuliers).</p>
+                <ul className="space-y-0.5">
+                  {ok(settings.address) && <li>Adresse : {settings.address}{ok(settings.city) ? `, ${settings.city}` : ''}</li>}
+                  {!ok(settings.address) && ok(settings.city) && <li>Ville : {settings.city}</li>}
+                  {ok(settings.phone) && <li>Téléphone : {settings.phone}</li>}
+                  {contactLine && <li>E-mail : {contactLine}</li>}
+                </ul>
+                <p>Directrice de la publication : Anne Sibadey.</p>
+              </Block>
+              <Block title="Hébergement">
+                <p>Le site est hébergé par GitHub Pages, service de GitHub, Inc., 88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, États-Unis (github.com).</p>
+                <p>Les données de l'espace enseignant et des messages reçus sont enregistrées par Supabase (supabase.com), sur des serveurs situés dans l'Union européenne.</p>
+              </Block>
+              <Block title="Propriété intellectuelle">
+                <p>Les textes, la mise en page et les éléments graphiques de ce site sont protégés par le droit d'auteur. Toute reproduction, totale ou partielle, sans autorisation écrite préalable est interdite.</p>
+              </Block>
+              <Block title="Avis">
+                <p>Les avis affichés proviennent de Google et sont reproduits avec l'accord de leurs auteurs.</p>
+              </Block>
+              <Block title="Responsabilité">
+                <p>Je m'efforce de fournir des informations exactes et à jour, sans garantie d'exhaustivité. Le site peut contenir des liens vers des sites tiers dont je ne maîtrise pas le contenu.</p>
+              </Block>
+              <Block title="Droit applicable">
+                <p>Le présent site est soumis au droit français.</p>
+              </Block>
+            </>
           )}
 
-          {/* TAB 3: Politique de Confidentialité */}
           {activeTab === 'privacy' && (
-            <div className="space-y-4">
-              <h4 className="font-serif-display text-lg font-semibold text-[#1E1B18]">
-                Politique de Confidentialité & Traitement des Données (RGPD)
-              </h4>
-              <p>
-                Le respect de votre vie privée et de vos données personnelles est une priorité absolue dans le cadre de mon activité d'enseignement du piano.
-              </p>
-              <div className="space-y-3">
-                <p>
-                  <strong>Données collectées :</strong> Dans le cadre des formulaires de contact et d'inscription, nous collectons vos nom, prénom, numéro de téléphone, adresse email, ainsi que les indications sur l'âge et le niveau pianistique de l'élève.
-                </p>
-                <p>
-                  <strong>Finalité du traitement :</strong> Ces données ont pour unique but de traiter votre demande d'information, d'établir le planning des cours et d'assurer le suivi pédagogique régulier de l'élève.
-                </p>
-                <p>
-                  <strong>Conservation et sécurité :</strong> Vos données sont conservées pour la durée stricte de la relation pédagogique et ne sont jamais transmises, vendues ou louées à des tiers.
-                </p>
-                <p>
-                  <strong>Vos droits :</strong> Conformément au Règlement Général sur la Protection des Données (RGPD), vous disposez à tout moment d'un droit d'accès, de rectification, de portabilité et de suppression de vos données personnelles sur simple demande par email.
-                </p>
-              </div>
-            </div>
+            <>
+              <p className="text-xs text-[#7A7369]">Dernière mise à jour : 30 septembre 2026</p>
+              <Block title="Responsable du traitement">
+                <p>Anne Sibadey, enseignante de piano{contactLine ? ` – ${contactLine}` : ''}.</p>
+              </Block>
+              <Block title="Principe">
+                <p>Je ne collecte que les données nécessaires pour répondre aux demandes et organiser les cours. Elles ne sont ni vendues, ni utilisées à des fins publicitaires.</p>
+              </Block>
+              <Block title="Données collectées et finalités">
+                <ul className="list-disc pl-5 space-y-1.5">
+                  <li><strong>Formulaire de contact</strong> : nom, prénom, adresse e-mail, téléphone, âge et niveau de l'élève, formule souhaitée, message. Finalité : répondre à votre demande (mesures précontractuelles prises à votre demande).</li>
+                  <li><strong>Élèves</strong> : identité, coordonnées, coordonnées du représentant légal pour les mineurs, niveau, créneau hebdomadaire et suivi pédagogique. Finalité : organiser et suivre les cours (exécution du contrat).</li>
+                  <li><strong>Espace enseignant</strong> : adresse e-mail et mot de passe de connexion, réservés à l'enseignante (intérêt légitime de sécurité).</li>
+                  <li><strong>Données techniques</strong> : l'hébergeur traite l'adresse IP et les journaux de connexion pour délivrer le site en sécurité (intérêt légitime).</li>
+                </ul>
+              </Block>
+              <Block title="Durées de conservation">
+                <p>Les demandes restées sans suite sont conservées 3 ans au maximum après le dernier contact. Le dossier d'un élève est conservé pendant la durée des cours, puis supprimé au plus tard un an après leur fin.</p>
+              </Block>
+              <Block title="Destinataires et transferts">
+                <p>Seule l'enseignante a accès aux données. Elles sont hébergées par Supabase (Union européenne), et le site est diffusé par GitHub (États-Unis). Les transferts hors Union européenne sont encadrés par les garanties prévues par le RGPD.</p>
+                <p>Le site charge ses polices de caractères depuis Google Fonts : votre adresse IP est alors transmise à Google pour l'affichage des polices.</p>
+              </Block>
+              <Block title="Mineurs">
+                <p>Les demandes concernant un enfant sont faites par ses parents ou son représentant légal.</p>
+              </Block>
+              <Block title="Cookies">
+                <p>Le site n'utilise aucun cookie publicitaire ni outil de mesure d'audience. L'espace enseignant utilise un stockage local du navigateur, strictement nécessaire à la connexion.</p>
+              </Block>
+              <Block title="Sécurité">
+                <p>Les échanges sont chiffrés (HTTPS) et l'accès aux données est réservé à l'enseignante, par authentification.</p>
+              </Block>
+              <Block title="Vos droits">
+                <p>Vous pouvez demander l'accès à vos données, leur rectification, leur effacement, la limitation ou l'opposition au traitement, ainsi que leur portabilité{contactLine ? `, en écrivant à ${contactLine}` : ', en me contactant par le formulaire du site'}. Je réponds dans un délai d'un mois. En cas de désaccord, vous pouvez saisir la CNIL (cnil.fr).</p>
+              </Block>
+            </>
+          )}
+
+          {activeTab === 'cgu' && (
+            <>
+              <Block title="Objet du site">
+                <p>Ce site présente l'activité d'enseignement du piano d'Anne Sibadey et permet de la contacter. Il ne permet ni de réserver, ni de payer un cours en ligne.</p>
+              </Block>
+              <Block title="Informations et tarifs">
+                <p>Les informations, formules et tarifs présentés sont donnés à titre indicatif. Les conditions des cours (créneau, tarif, règlement, calendrier) sont précisées et acceptées séparément, lors de l'inscription, en dehors du site.</p>
+              </Block>
+              <Block title="Formulaire de contact">
+                <p>Il sert uniquement à demander des informations. L'envoyer ne crée aucun engagement, ni pour vous, ni pour moi. Merci de ne pas y indiquer de données sensibles.</p>
+              </Block>
+              <Block title="Accès au site">
+                <p>Le site est accessible librement. Il peut être modifié ou suspendu à tout moment, sans préavis, pour maintenance ou évolution.</p>
+              </Block>
+              <Block title="Espace enseignant">
+                <p>L'accès à cet espace est réservé à l'enseignante. Toute tentative d'accès non autorisé est interdite.</p>
+              </Block>
+              <Block title="Propriété intellectuelle et droit applicable">
+                <p>Voir les mentions légales. Les présentes conditions sont soumises au droit français.</p>
+              </Block>
+            </>
           )}
 
         </div>
 
-        {/* Modal Footer */}
         <div className="px-6 py-4 border-t border-[#E8E2D8] bg-[#FAF8F5] flex justify-end">
-          <button
-            onClick={onClose}
-            className="px-5 py-2 text-xs sm:text-sm font-medium text-white bg-[#1E1B18] rounded-xl hover:bg-[#342F2B] transition-colors"
-          >
+          <button onClick={onClose} className="px-5 py-2 text-xs sm:text-sm font-medium text-white bg-[#1E1B18] rounded-xl hover:bg-[#342F2B] transition-colors">
             Fermer
           </button>
         </div>
