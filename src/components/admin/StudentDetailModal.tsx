@@ -4,6 +4,7 @@ import {
   CreditCard, BookOpen, Plus, AlertCircle, CheckCircle2, Trash2, Edit3 
 } from 'lucide-react';
 import { Student, PedagogicalLog } from '../../types';
+import { formatMinutes } from '../../utils/schoolCalendar';
 
 interface StudentDetailModalProps {
   student: Student | null;
@@ -52,7 +53,7 @@ export const StudentDetailModal: React.FC<StudentDetailModalProps> = ({
                 </span>
               </div>
               <p className="text-xs text-[#7A7369]">
-                {student.level} · Formule {student.formula} · Inscrit(e) depuis {student.startDate}
+                {student.level} · Formule {student.formula} · Inscrit(e) depuis {student.startDate} · Absences : {formatMinutes(student.absenceMinutes || 0)}
               </p>
             </div>
           </div>

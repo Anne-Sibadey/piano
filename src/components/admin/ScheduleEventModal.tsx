@@ -106,6 +106,7 @@ export const ScheduleEventModal: React.FC<ScheduleEventModalProps> = ({
       durationMinutes,
       type,
       notes: notes.trim(),
+      absent: eventToEdit?.absent,
       roomOrLocation: location.trim()
     };
 

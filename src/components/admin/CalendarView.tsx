@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { 
   Calendar as CalendarIcon, ChevronLeft, ChevronRight, Plus, 
-  Clock, User, MapPin, Filter 
+  Clock, User, MapPin, Filter, UserX 
 } from 'lucide-react';
 import { ScheduleEvent, Student, EventType } from '../../types';
-import { dayOffReason, toISO } from '../../utils/schoolCalendar';
+import { dayOffReason, toISO, HATCH } from '../../utils/schoolCalendar';
 
 // Grille horaire fixe : 7h30 → 20h00
 const START = 7 * 60 + 30;
@@ -46,6 +46,7 @@ interface CalendarViewProps {
   onEditEvent: (event: ScheduleEvent) => void;
   onSelectStudent: (student: Student) => void;
   onGenerateYear?: () => void;
+  onToggleAbsence?: (eventId: string) => void;
 }
 
 export const CalendarView: React.FC<CalendarViewProps> = ({
@@ -54,7 +55,8 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
   onOpenNewEvent,
   onEditEvent,
   onSelectStudent,
-  onGenerateYear
+  onGenerateYear,
+  onToggleAbsence
 }) => {
   const [viewMode, setViewMode] = useState<'week' | 'month'>('week');
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -280,16 +282,26 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
                   {layout(dayEvents).map(({ e, s, en, lane, lanes }) => {
                     const top = Math.min(y(Math.max(s, START)), y(END) - 22);
                     const h = Math.max((Math.min(en, END) - Math.max(s, START)) * PX, 22);
+                    const canMark = !!onToggleAbsence && e.date === toISO(now) && !!e.studentId && e.type.startsWith('course');
                     return (
                       <div
                         key={e.id}
                         onClick={() => onEditEvent(e)}
                         title={`${e.startTime} – ${e.endTime} · ${e.title}`}
-                        className={`absolute z-10 rounded-lg border px-1.5 py-0.5 text-[11px] leading-tight overflow-hidden cursor-pointer hover:shadow-md ${getEventStyle(e.type)}`}
-                        style={{ top: top + 1, height: h - 2, left: `calc(${(lane / lanes) * 100}% + 2px)`, width: `calc(${100 / lanes}% - 4px)` }}
+                        className={`absolute z-10 rounded-lg border px-1.5 py-0.5 text-[11px] leading-tight overflow-hidden cursor-pointer hover:shadow-md ${canMark ? 'pr-6' : ''} ${getEventStyle(e.type)}`}
+                        style={{ top: top + 1, height: h - 2, left: `calc(${(lane / lanes) * 100}% + 2px)`, width: `calc(${100 / lanes}% - 4px)`, backgroundImage: e.absent ? HATCH : undefined }}
                       >
                         <div className="font-semibold">{e.startTime}–{e.endTime}</div>
-                        <div className="font-medium text-[#1E1B18] truncate">{e.title}</div>
+                        <div className="font-medium text-[#1E1B18] truncate">{e.absent ? 'Absent · ' : ''}{e.title}</div>
+                        {canMark && (
+                          <button
+                            onClick={(ev) => { ev.stopPropagation(); onToggleAbsence!(e.id); }}
+                            title={e.absent ? "Annuler l'absence" : 'Déclarer absent'}
+                            className="absolute top-0.5 right-0.5 p-0.5 rounded bg-white/80 hover:bg-white text-red-700"
+                          >
+                            <UserX className="w-3.5 h-3.5" />
+                          </button>
+                        )}
                       </div>
                     );
                   })}

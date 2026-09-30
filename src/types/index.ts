@@ -13,6 +13,7 @@ export interface ParentContact {
 
 export interface Student {
   id: string;
+  absenceMinutes?: number; // cumul des absences, modifiable à la main
   firstName: string;
   lastName: string;
   birthDate: string; // YYYY-MM-DD
@@ -67,6 +68,7 @@ export interface ScheduleEvent {
   notes?: string;
   roomOrLocation?: string;
   auto?: boolean; // cours généré automatiquement
+  absent?: boolean; // élève déclaré absent
 }
 
 export interface ContactInquiry {

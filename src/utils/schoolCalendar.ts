@@ -90,3 +90,13 @@ export const generateYear = (students: Student[], events: ScheduleEvent[], from:
   }
   return { events: [...kept, ...created], created: created.length, skipped };
 };
+
+export const formatMinutes = (min: number) => {
+  const h = Math.floor(min / 60);
+  const m = Math.round(min % 60);
+  if (h === 0) return `${m} min`;
+  return m ? `${h} h ${String(m).padStart(2, '0')}` : `${h} h`;
+};
+
+// Hachures légères pour un cours où l'élève est absent
+export const HATCH = 'repeating-linear-gradient(135deg, rgba(30,27,24,0.08) 0, rgba(30,27,24,0.08) 5px, transparent 5px, transparent 10px)';

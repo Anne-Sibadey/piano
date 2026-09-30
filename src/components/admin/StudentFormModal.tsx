@@ -35,6 +35,7 @@ export const StudentFormModal: React.FC<StudentFormModalProps> = ({
     paymentStatus: 'up_to_date' as PaymentStatus,
     paymentNotes: '',
     habitualSlot: 'Mercredi 14h30 - 15h15',
+    absenceMinutes: 0,
     goalsInput: '',
     currentPiecesInput: '',
     pastPiecesInput: '',
@@ -64,6 +65,7 @@ export const StudentFormModal: React.FC<StudentFormModalProps> = ({
         paymentStatus: studentToEdit.paymentStatus,
         paymentNotes: studentToEdit.paymentNotes,
         habitualSlot: studentToEdit.habitualSlot,
+        absenceMinutes: studentToEdit.absenceMinutes || 0,
         goalsInput: studentToEdit.goals.join('\n'),
         currentPiecesInput: studentToEdit.currentPieces.join('\n'),
         pastPiecesInput: studentToEdit.pastPieces.join('\n'),
@@ -91,6 +93,7 @@ export const StudentFormModal: React.FC<StudentFormModalProps> = ({
         paymentStatus: 'up_to_date',
         paymentNotes: '',
         habitualSlot: '',
+        absenceMinutes: 0,
         goalsInput: '',
         currentPiecesInput: '',
         pastPiecesInput: '',
@@ -139,6 +142,7 @@ export const StudentFormModal: React.FC<StudentFormModalProps> = ({
       paymentStatus: formData.paymentStatus,
       paymentNotes: formData.paymentNotes.trim(),
       habitualSlot: formData.habitualSlot.trim(),
+      absenceMinutes: formData.absenceMinutes,
       goals: formData.goalsInput.split('\n').map(s => s.trim()).filter(Boolean),
       currentPieces: formData.currentPiecesInput.split('\n').map(s => s.trim()).filter(Boolean),
       pastPieces: formData.pastPiecesInput.split('\n').map(s => s.trim()).filter(Boolean),
@@ -377,6 +381,31 @@ export const StudentFormModal: React.FC<StudentFormModalProps> = ({
                   onChange={(e) => setFormData({ ...formData, habitualSlot: e.target.value })}
                   className="w-full px-3 py-2 text-sm bg-[#FAF8F5] border border-[#D8D1C7] rounded-xl"
                 />
+              </div>
+
+              <div>
+                <label className="block text-xs font-medium text-[#3A3530] mb-1">
+                  Absences cumulées
+                </label>
+                <div className="flex items-center gap-2 text-xs text-[#5A544D]">
+                  <input
+                    type="number"
+                    min={0}
+                    value={Math.floor(formData.absenceMinutes / 60)}
+                    onChange={(e) => setFormData({ ...formData, absenceMinutes: Math.max(0, Number(e.target.value) || 0) * 60 + (formData.absenceMinutes % 60) })}
+                    className="w-20 px-3 py-2 text-sm bg-[#FAF8F5] border border-[#D8D1C7] rounded-xl"
+                  />
+                  <span>h</span>
+                  <input
+                    type="number"
+                    min={0}
+                    max={59}
+                    value={formData.absenceMinutes % 60}
+                    onChange={(e) => setFormData({ ...formData, absenceMinutes: Math.floor(formData.absenceMinutes / 60) * 60 + Math.min(59, Math.max(0, Number(e.target.value) || 0)) })}
+                    className="w-20 px-3 py-2 text-sm bg-[#FAF8F5] border border-[#D8D1C7] rounded-xl"
+                  />
+                  <span>min</span>
+                </div>
               </div>
             </div>
 

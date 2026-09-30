@@ -198,6 +198,18 @@ export default function App() {
     setInquiries(prev => prev.map(i => i.id === id ? { ...i, status } : i));
   };
 
+  // Déclarer / annuler l'absence d'un élève sur un cours (met à jour son compteur)
+  const handleToggleAbsence = (id: string) => {
+    const evt = scheduleEvents.find(e => e.id === id);
+    if (!evt) return;
+    const nowAbsent = !evt.absent;
+    setScheduleEvents(prev => prev.map(e => e.id === id ? { ...e, absent: nowAbsent, auto: false } : e));
+    if (evt.studentId) {
+      const delta = (nowAbsent ? 1 : -1) * (evt.durationMinutes || 0);
+      setStudents(prev => prev.map(s => s.id === evt.studentId ? { ...s, absenceMinutes: Math.max(0, (s.absenceMinutes || 0) + delta) } : s));
+    }
+  };
+
   const handleDeleteInquiry = async (id: string) => {
     if (!window.confirm('Supprimer définitivement cette demande de contact ? Cette action est irréversible.')) return;
     if (await deleteInquiry(id)) {
@@ -271,6 +283,7 @@ export default function App() {
               students={students}
               logs={logs}
               scheduleEvents={scheduleEvents}
+              onToggleAbsence={handleToggleAbsence}
               inquiries={inquiries}
               onOpenNewStudent={() => {
                 setStudentToEdit(null);
@@ -314,6 +327,7 @@ export default function App() {
               events={scheduleEvents}
               students={students}
               onGenerateYear={handleGenerateYear}
+              onToggleAbsence={handleToggleAbsence}
               onOpenNewEvent={(date) => {
                 setEventToEdit(null);
                 setPreselectedDateForEvent(date);

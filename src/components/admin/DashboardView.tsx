@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { 
   Users, Calendar, Clock, AlertCircle, Plus, BookOpen, 
-  ArrowRight, CheckCircle2, ChevronRight, MessageSquare 
+  ArrowRight, CheckCircle2, ChevronRight, MessageSquare, UserX 
 } from 'lucide-react';
 import { Student, PedagogicalLog, ScheduleEvent, ContactInquiry } from '../../types';
-import { toISO } from '../../utils/schoolCalendar';
+import { toISO, formatMinutes, HATCH } from '../../utils/schoolCalendar';
 
 interface DashboardViewProps {
   students: Student[];
@@ -15,6 +15,7 @@ interface DashboardViewProps {
   onOpenNewLog: (studentId?: string) => void;
   onOpenNewScheduleEvent: () => void;
   onSelectStudent: (student: Student) => void;
+  onToggleAbsence: (eventId: string) => void;
   onGoToTab: (tab: 'students' | 'calendar' | 'pedagogy' | 'inquiries') => void;
 }
 
@@ -27,6 +28,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   onOpenNewLog,
   onOpenNewScheduleEvent,
   onSelectStudent,
+  onToggleAbsence,
   onGoToTab
 }) => {
   const activeStudents = students.filter(s => s.status === 'active');
@@ -54,7 +56,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   sunday.setDate(monday.getDate() + 6);
   const weekMinutes = Math.round(
     scheduleEvents
-      .filter(e => e.type.startsWith('course') && e.date >= toISO(monday) && e.date <= toISO(sunday))
+      .filter(e => e.type.startsWith('course') && !e.absent && e.date >= toISO(monday) && e.date <= toISO(sunday))
       .reduce((sum, e) => {
         const start = at(e.date, e.startTime);
         const end = endOf(e);
@@ -65,6 +67,8 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   const weekHoursLabel = weekMinutes % 60 === 0
     ? `${weekMinutes / 60} h`
     : `${Math.floor(weekMinutes / 60)} h ${String(weekMinutes % 60).padStart(2, '0')}`;
+
+  const totalAbsenceMinutes = students.reduce((sum, s) => sum + (s.absenceMinutes || 0), 0);
 
   // Événements à venir : ceux qui ne sont pas encore terminés (jour ET heure)
   const upcomingEvents = scheduleEvents
@@ -122,7 +126,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
       </div>
 
       {/* KPI Cards Grid */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+      <div className="grid grid-cols-2 lg:grid-cols-5 gap-4 sm:gap-6">
         
         {/* Active Students */}
         <div 
@@ -158,6 +162,18 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             <span>Jusqu'à dimanche</span>
             <span className="text-[#B0824B] hover:underline">Calendrier →</span>
           </div>
+        </div>
+
+        {/* Absences cumulées */}
+        <div className="p-5 bg-white rounded-xl border border-[#E8E2D8]">
+          <div className="flex items-center justify-between text-[#7A7369] mb-2">
+            <span className="text-xs font-medium">Absences</span>
+            <UserX className="w-4 h-4 text-[#B0824B]" />
+          </div>
+          <div className="font-serif-display text-3xl font-semibold text-[#1E1B18] tabular-nums">
+            {formatMinutes(totalAbsenceMinutes)}
+          </div>
+          <div className="text-[11px] text-[#8A8275] mt-1">Cumul de tous les élèves</div>
         </div>
 
         {/* Pending Inquiries */}
@@ -227,7 +243,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 const linkedStudent = evt.studentId ? students.find(s => s.id === evt.studentId) : null;
 
                 return (
-                  <div key={evt.id} className="p-4 hover:bg-[#FAF8F5] transition-colors flex items-center justify-between gap-4">
+                  <div key={evt.id} style={evt.absent ? { backgroundImage: HATCH } : undefined} className="p-4 hover:bg-[#FAF8F5] transition-colors flex items-center justify-between gap-4">
                     <div className="flex items-start gap-3">
                       <div className="w-12 h-12 rounded-lg bg-[#FAF3EA] border border-[#E8DFC8] flex flex-col items-center justify-center text-center shrink-0">
                         <span className="text-[10px] text-[#7A7369] font-medium uppercase leading-tight">
@@ -239,7 +255,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                       </div>
                       <div>
                         <h4 className="font-medium text-sm text-[#1E1B18]">
-                          {evt.title}
+                          {evt.absent ? 'Absent · ' : ''}{evt.title}
                         </h4>
                         <div className="flex items-center gap-2 text-xs text-[#7A7369] mt-0.5">
                           <Clock className="w-3 h-3 text-[#B0824B]" />
@@ -250,6 +266,14 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                     </div>
 
                     <div className="shrink-0 flex items-center gap-2">
+                      {evt.date === toISO(now) && evt.studentId && evt.type.startsWith('course') && (
+                        <button
+                          onClick={() => onToggleAbsence(evt.id)}
+                          className={`px-2.5 py-1 text-xs font-medium rounded-lg border transition-colors ${evt.absent ? 'text-[#5A544D] bg-[#F2ECE3] border-[#D8D1C7]' : 'text-red-700 bg-white border-red-200 hover:bg-red-50'}`}
+                        >
+                          {evt.absent ? "Annuler l'absence" : 'Absent'}
+                        </button>
+                      )}
                       {linkedStudent && (
                         <button
                           onClick={() => onSelectStudent(linkedStudent)}
