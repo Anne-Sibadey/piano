@@ -4,7 +4,40 @@ import {
   Clock, User, MapPin, Filter 
 } from 'lucide-react';
 import { ScheduleEvent, Student, EventType } from '../../types';
-import { dayOffReason } from '../../utils/schoolCalendar';
+import { dayOffReason, toISO } from '../../utils/schoolCalendar';
+
+// Grille horaire fixe : 7h30 → 20h00
+const START = 7 * 60 + 30;
+const END = 20 * 60;
+const PX = 1.4; // pixels par minute
+const PAD = 10;
+const GRID_H = (END - START) * PX + 2 * PAD;
+const y = (m: number) => (m - START) * PX + PAD;
+const SLOTS = Array.from({ length: (END - START) / 30 + 1 }, (_, i) => START + i * 30);
+const slotLabel = (m: number) => `${Math.floor(m / 60)}h${String(m % 60).padStart(2, '0')}`;
+const toMin = (t: string) => { const [h, m] = (t || '0:0').split(':').map(Number); return h * 60 + (m || 0); };
+
+// Place les cours qui se chevauchent côte à côte.
+const layout = (evs: ScheduleEvent[]) => {
+  const items = evs
+    .map((e) => { const s = toMin(e.startTime); const en = e.endTime ? toMin(e.endTime) : s + (e.durationMinutes || 45); return { e, s, en, lane: 0, lanes: 1 }; })
+    .sort((a, b) => a.s - b.s || a.en - b.en);
+  const out: typeof items = [];
+  let cluster: typeof items = [];
+  let clusterEnd = -1;
+  const flush = () => { const n = Math.max(0, ...cluster.map((c) => c.lane)) + 1; cluster.forEach((c) => (c.lanes = n)); out.push(...cluster); cluster = []; };
+  for (const it of items) {
+    if (cluster.length && it.s >= clusterEnd) { flush(); clusterEnd = -1; }
+    const used = new Set(cluster.filter((c) => c.en > it.s).map((c) => c.lane));
+    let lane = 0;
+    while (used.has(lane)) lane++;
+    it.lane = lane;
+    cluster.push(it);
+    clusterEnd = Math.max(clusterEnd, it.en);
+  }
+  if (cluster.length) flush();
+  return out;
+};
 
 interface CalendarViewProps {
   events: ScheduleEvent[];
@@ -24,7 +57,7 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
   onGenerateYear
 }) => {
   const [viewMode, setViewMode] = useState<'week' | 'month'>('week');
-  const [currentDate, setCurrentDate] = useState(new Date('2026-10-05')); // Default to a Monday week
+  const [currentDate, setCurrentDate] = useState(new Date());
   const [typeFilter, setTypeFilter] = useState<'all' | 'courses' | 'vacation' | 'absence'>('all');
 
   // Compute start of current week (Monday)
@@ -57,7 +90,7 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
   };
 
   const setToday = () => {
-    setCurrentDate(new Date('2026-10-05'));
+    setCurrentDate(new Date());
   };
 
   // Filter events
@@ -186,86 +219,75 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
 
       </div>
 
-      {/* Week Calendar Grid (6 columns: Lundi to Samedi) */}
-      <div className="bg-white rounded-2xl border border-[#E8E2D8] shadow-sm overflow-hidden">
-        
-        {/* Days Header */}
-        <div className="grid grid-cols-1 md:grid-cols-6 divide-y md:divide-y-0 md:divide-x divide-[#E8E2D8] bg-[#FAF8F5] border-b border-[#E8E2D8]">
-          {weekDays.map((day) => {
-            const dateStr = day.toISOString().split('T')[0];
-            const isToday = dateStr === new Date().toISOString().split('T')[0];
-
-            return (
-              <div key={dateStr} className={`p-3 text-center ${isToday ? 'bg-[#FAF3EA]' : ''}`}>
-                <div className="text-[11px] font-semibold uppercase tracking-wider text-[#7A7369]">
-                  {day.toLocaleDateString('fr-FR', { weekday: 'long' })}
+      {/* Grille horaire fixe (7h30 - 20h00), du lundi au samedi */}
+      <div className="bg-white rounded-2xl border border-[#E8E2D8] shadow-sm overflow-x-auto">
+        <div className="min-w-[780px]">
+          <div className="grid border-b border-[#E8E2D8] bg-[#FAF8F5]" style={{ gridTemplateColumns: '56px repeat(6, minmax(0, 1fr))' }}>
+            <div />
+            {weekDays.map((day) => {
+              const dateStr = toISO(day);
+              const isToday = dateStr === toISO(new Date());
+              const offReason = dayOffReason(dateStr);
+              return (
+                <div key={dateStr} className={`p-2.5 text-center border-l border-[#E8E2D8] ${isToday ? 'bg-[#FAF3EA]' : ''}`}>
+                  <div className="text-[11px] font-semibold uppercase tracking-wider text-[#7A7369]">
+                    {day.toLocaleDateString('fr-FR', { weekday: 'long' })}
+                  </div>
+                  <div className={`font-serif-display text-lg font-medium mt-0.5 ${isToday ? 'text-[#B0824B] font-bold' : 'text-[#1E1B18]'}`}>
+                    {day.getDate()} {day.toLocaleDateString('fr-FR', { month: 'short' })}
+                  </div>
+                  <div className="h-4 text-[10px] uppercase tracking-wide text-[#8A8275]">{offReason || ''}</div>
+                  <button
+                    onClick={() => onOpenNewEvent(dateStr)}
+                    className="mt-1 inline-flex items-center gap-1 px-2 py-0.5 text-[11px] text-[#7A7369] hover:text-[#1E1B18] hover:bg-white rounded-md border border-dashed border-[#D8D1C7]"
+                  >
+                    <Plus className="w-3 h-3" />
+                    <span>Ajouter</span>
+                  </button>
                 </div>
-                <div className={`font-serif-display text-lg font-medium mt-0.5 ${isToday ? 'text-[#B0824B] font-bold' : 'text-[#1E1B18]'}`}>
-                  {day.getDate()} {day.toLocaleDateString('fr-FR', { month: 'short' })}
+              );
+            })}
+          </div>
+
+          <div className="grid" style={{ gridTemplateColumns: '56px repeat(6, minmax(0, 1fr))' }}>
+            <div className="relative" style={{ height: GRID_H }}>
+              {SLOTS.map((m) => (
+                <div key={m} className="absolute right-1.5 -translate-y-1/2 text-[10px] text-[#8A8275]" style={{ top: y(m) }}>
+                  {slotLabel(m)}
                 </div>
-              </div>
-            );
-          })}
-        </div>
+              ))}
+            </div>
 
-        {/* Days Content Columns */}
-        <div className="grid grid-cols-1 md:grid-cols-6 divide-y md:divide-y-0 md:divide-x divide-[#E8E2D8] min-h-[460px]">
-          {weekDays.map((day) => {
-            const dateStr = day.toISOString().split('T')[0];
-            const dayEvents = filteredEvents.filter(e => e.date === dateStr);
-            const offReason = dayOffReason(dateStr);
-
-            return (
-              <div 
-                key={dateStr} 
-                className={`p-3 flex flex-col justify-between hover:bg-[#FAF8F5]/50 transition-colors relative min-h-[160px] md:min-h-0 ${offReason ? 'bg-[#F3EFEA]' : 'bg-white/70'}`}
-              >
-                {offReason && (
-                  <div className="text-[10px] uppercase tracking-wide text-[#8A8275] mb-1">{offReason}</div>
-                )}
-                {/* Events list for this day */}
-                <div className="space-y-2.5">
-                  {dayEvents.length > 0 ? (
-                    dayEvents.map((evt) => (
+            {weekDays.map((day) => {
+              const dateStr = toISO(day);
+              const offReason = dayOffReason(dateStr);
+              const dayEvents = filteredEvents.filter((e) => e.date === dateStr);
+              return (
+                <div key={dateStr} className={`relative border-l border-[#E8E2D8] ${offReason ? 'bg-[#F3EFEA]' : ''}`} style={{ height: GRID_H }}>
+                  {SLOTS.map((m) => (
+                    <div key={m} className={`absolute inset-x-0 border-t ${m % 60 === 0 ? 'border-[#E8E2D8]' : 'border-[#F1EDE6]'}`} style={{ top: y(m) }} />
+                  ))}
+                  {layout(dayEvents).map(({ e, s, en, lane, lanes }) => {
+                    const top = Math.min(y(Math.max(s, START)), y(END) - 22);
+                    const h = Math.max((Math.min(en, END) - Math.max(s, START)) * PX, 22);
+                    return (
                       <div
-                        key={evt.id}
-                        onClick={() => onEditEvent(evt)}
-                        className={`p-2.5 rounded-xl border text-xs cursor-pointer hover:shadow-xs transition-all ${getEventStyle(evt.type)}`}
+                        key={e.id}
+                        onClick={() => onEditEvent(e)}
+                        title={`${e.startTime} – ${e.endTime} · ${e.title}`}
+                        className={`absolute z-10 rounded-lg border px-1.5 py-0.5 text-[11px] leading-tight overflow-hidden cursor-pointer hover:shadow-md ${getEventStyle(e.type)}`}
+                        style={{ top: top + 1, height: h - 2, left: `calc(${(lane / lanes) * 100}% + 2px)`, width: `calc(${100 / lanes}% - 4px)` }}
                       >
-                        <div className="flex items-center justify-between font-semibold">
-                          <span>{evt.startTime} – {evt.endTime}</span>
-                          <span className="text-[10px] opacity-80">{getEventDurationLabel(evt.type, evt.durationMinutes)}</span>
-                        </div>
-                        <div className="font-medium mt-1 text-[#1E1B18] line-clamp-1">
-                          {evt.title}
-                        </div>
-                        {evt.notes && (
-                          <div className="text-[11px] opacity-75 mt-0.5 line-clamp-1">
-                            {evt.notes}
-                          </div>
-                        )}
+                        <div className="font-semibold">{e.startTime}–{e.endTime}</div>
+                        <div className="font-medium text-[#1E1B18] truncate">{e.title}</div>
                       </div>
-                    ))
-                  ) : (
-                    <div className="pt-8 text-center text-xs text-[#A8A196] italic">
-                      Aucun cours
-                    </div>
-                  )}
+                    );
+                  })}
                 </div>
-
-                {/* Quick Add on this specific day */}
-                <button
-                  onClick={() => onOpenNewEvent(dateStr)}
-                  className="mt-4 w-full py-1.5 text-[11px] font-medium text-[#7A7369] hover:text-[#1E1B18] hover:bg-[#FAF8F5] rounded-lg border border-dashed border-[#D8D1C7] transition-colors flex items-center justify-center gap-1"
-                >
-                  <Plus className="w-3 h-3" />
-                  <span>Ajouter</span>
-                </button>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
         </div>
-
       </div>
 
       {/* Vacation / Special Periods Banner */}
