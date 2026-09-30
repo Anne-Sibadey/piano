@@ -1,0 +1,6 @@
+{
+  "name": "Atelier Piano — Cours Particuliers & Suivi Pédagogique",
+  "description": "Enseignement du piano personnalisé et bienveillant, pour enfants, adolescents et adultes. Espace public et gestion d'activité d'enseignement.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
