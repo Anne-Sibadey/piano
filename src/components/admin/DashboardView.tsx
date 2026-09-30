@@ -4,6 +4,7 @@ import {
   ArrowRight, CheckCircle2, ChevronRight, MessageSquare 
 } from 'lucide-react';
 import { Student, PedagogicalLog, ScheduleEvent, ContactInquiry } from '../../types';
+import { toISO } from '../../utils/schoolCalendar';
 
 interface DashboardViewProps {
   students: Student[];
@@ -32,6 +33,18 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   const pendingPayments = students.filter(s => s.paymentStatus === 'pending');
   const newInquiries = inquiries.filter(i => i.status === 'new');
   
+  // Heures de cours de la semaine en cours (lundi au dimanche)
+  const today = new Date();
+  const monday = new Date(today.getFullYear(), today.getMonth(), today.getDate() - ((today.getDay() + 6) % 7));
+  const sunday = new Date(monday);
+  sunday.setDate(monday.getDate() + 6);
+  const weekMinutes = scheduleEvents
+    .filter(e => e.type.startsWith('course') && e.date >= toISO(monday) && e.date <= toISO(sunday))
+    .reduce((sum, e) => sum + (e.durationMinutes || 0), 0);
+  const weekHoursLabel = weekMinutes % 60 === 0
+    ? `${weekMinutes / 60} h`
+    : `${Math.floor(weekMinutes / 60)} h ${String(weekMinutes % 60).padStart(2, '0')}`;
+
   // Sort events by date & time
   const upcomingEvents = [...scheduleEvents]
     .sort((a, b) => (a.date + a.startTime).localeCompare(b.date + b.startTime))
@@ -113,14 +126,14 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           className="p-5 bg-white rounded-xl border border-[#E8E2D8] hover:border-[#D5C7B0] cursor-pointer transition-all hover:shadow-sm"
         >
           <div className="flex items-center justify-between text-[#7A7369] mb-2">
-            <span className="text-xs font-medium">Créneaux programmés</span>
+            <span className="text-xs font-medium">Heures/semaine</span>
             <Calendar className="w-4 h-4 text-[#B0824B]" />
           </div>
           <div className="font-serif-display text-3xl font-semibold text-[#1E1B18] tabular-nums">
-            {scheduleEvents.filter(e => e.type.startsWith('course')).length}
+            {weekHoursLabel}
           </div>
           <div className="text-[11px] text-[#8A8275] mt-1 flex items-center justify-between">
-            <span>Cette semaine & à venir</span>
+            <span>Du lundi au dimanche</span>
             <span className="text-[#B0824B] hover:underline">Calendrier →</span>
           </div>
         </div>
