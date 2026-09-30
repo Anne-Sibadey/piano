@@ -445,7 +445,7 @@ export default function App() {
 
       {/* 2. Student Full Detail Modal (Fiche Individuelle) */}
       <StudentDetailModal
-        student={selectedStudentForDetail}
+        student={selectedStudentForDetail ? (students.find(s => s.id === selectedStudentForDetail.id) || selectedStudentForDetail) : null}
         logs={logs}
         onClose={() => setSelectedStudentForDetail(null)}
         onEditStudent={(st) => {
