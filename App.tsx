@@ -210,27 +210,6 @@ export default function App() {
     }
   };
 
-  // Déclarer un élève absent sur une semaine glissante (aujourd'hui + 6 jours)
-  const handleAbsentWeek = (studentId: string) => {
-    const student = students.find(s => s.id === studentId);
-    const from = toISO(new Date());
-    const endDate = new Date();
-    endDate.setDate(endDate.getDate() + 6);
-    const to = toISO(endDate);
-    const targets = scheduleEvents.filter(e => e.studentId === studentId && e.type.startsWith('course') && !e.absent && e.date >= from && e.date <= to);
-    if (targets.length === 0) {
-      window.alert('Aucun cours à déclarer absent sur les 7 prochains jours.');
-      return;
-    }
-    const label = `${student ? student.firstName : "L'élève"}`;
-    const fr = (d: string) => d.split('-').reverse().slice(0, 2).join('/');
-    if (!window.confirm(`Déclarer ${label} absent sur ${targets.length} cours, du ${fr(from)} au ${fr(to)} (7 jours à partir d'aujourd'hui) ?`)) return;
-    const ids = new Set(targets.map(e => e.id));
-    const minutes = targets.reduce((sum, e) => sum + (e.durationMinutes || 0), 0);
-    setScheduleEvents(prev => prev.map(e => ids.has(e.id) ? { ...e, absent: true, auto: false } : e));
-    setStudents(prev => prev.map(s => s.id === studentId ? { ...s, absencesCount: (s.absencesCount || 0) + targets.length, absenceMinutes: (s.absenceMinutes || 0) + minutes } : s));
-  };
-
   const handleDeleteInquiry = async (id: string) => {
     if (!window.confirm('Supprimer définitivement cette demande de contact ? Cette action est irréversible.')) return;
     if (await deleteInquiry(id)) {
@@ -305,7 +284,6 @@ export default function App() {
               logs={logs}
               scheduleEvents={scheduleEvents}
               onToggleAbsence={handleToggleAbsence}
-              onAbsentWeek={handleAbsentWeek}
               inquiries={inquiries}
               onOpenNewStudent={() => {
                 setStudentToEdit(null);
@@ -350,7 +328,6 @@ export default function App() {
               students={students}
               onGenerateYear={handleGenerateYear}
               onToggleAbsence={handleToggleAbsence}
-              onAbsentWeek={handleAbsentWeek}
               onOpenNewEvent={(date) => {
                 setEventToEdit(null);
                 setPreselectedDateForEvent(date);

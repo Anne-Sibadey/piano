@@ -16,7 +16,6 @@ interface DashboardViewProps {
   onOpenNewScheduleEvent: () => void;
   onSelectStudent: (student: Student) => void;
   onToggleAbsence: (eventId: string) => void;
-  onAbsentWeek: (studentId: string) => void;
   onGoToTab: (tab: 'students' | 'calendar' | 'pedagogy' | 'inquiries') => void;
 }
 
@@ -30,7 +29,6 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   onOpenNewScheduleEvent,
   onSelectStudent,
   onToggleAbsence,
-  onAbsentWeek,
   onGoToTab
 }) => {
   const activeStudents = students.filter(s => s.status === 'active');
@@ -268,15 +266,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                     </div>
 
                     <div className="shrink-0 flex items-center gap-2">
-                      {evt.date === toISO(now) && !evt.absent && evt.studentId && evt.type.startsWith('course') && (
-                        <button
-                          onClick={() => onAbsentWeek(evt.studentId!)}
-                          className="px-2.5 py-1 text-xs font-medium rounded-lg border text-red-700 bg-white border-red-200 hover:bg-red-50 transition-colors"
-                        >
-                          Absent 7 jours
-                        </button>
-                      )}
-                      {evt.date >= toISO(now) && evt.date <= toISO(new Date(now.getFullYear(), now.getMonth(), now.getDate() + 6)) && evt.studentId && evt.type.startsWith('course') && (
+                      {evt.date === toISO(now) && evt.studentId && evt.type.startsWith('course') && (
                         <button
                           onClick={() => onToggleAbsence(evt.id)}
                           className={`px-2.5 py-1 text-xs font-medium rounded-lg border transition-colors ${evt.absent ? 'text-[#5A544D] bg-[#F2ECE3] border-[#D8D1C7]' : 'text-red-700 bg-white border-red-200 hover:bg-red-50'}`}

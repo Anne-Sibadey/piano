@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { 
   Calendar as CalendarIcon, ChevronLeft, ChevronRight, Plus, 
-  Clock, User, MapPin, Filter, UserX, CalendarX 
+  Clock, User, MapPin, Filter, UserX 
 } from 'lucide-react';
 import { ScheduleEvent, Student, EventType } from '../../types';
 import { dayOffReason, toISO, HATCH } from '../../utils/schoolCalendar';
@@ -47,7 +47,6 @@ interface CalendarViewProps {
   onSelectStudent: (student: Student) => void;
   onGenerateYear?: () => void;
   onToggleAbsence?: (eventId: string) => void;
-  onAbsentWeek?: (studentId: string) => void;
 }
 
 export const CalendarView: React.FC<CalendarViewProps> = ({
@@ -57,8 +56,7 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
   onEditEvent,
   onSelectStudent,
   onGenerateYear,
-  onToggleAbsence,
-  onAbsentWeek
+  onToggleAbsence
 }) => {
   const [viewMode, setViewMode] = useState<'week' | 'month'>('week');
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -67,6 +65,8 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
     const t = setInterval(() => setNow(new Date()), 60000);
     return () => clearInterval(t);
   }, []);
+  // Lundi de la semaine courante (le bouton d'absence est disponible du lundi jusqu'à aujourd'hui)
+  const mondayNow = new Date(now.getFullYear(), now.getMonth(), now.getDate() - ((now.getDay() + 6) % 7));
   const [typeFilter, setTypeFilter] = useState<'all' | 'courses' | 'vacation' | 'absence'>('all');
 
   // Compute start of current week (Monday)
@@ -284,14 +284,13 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
                   {layout(dayEvents).map(({ e, s, en, lane, lanes }) => {
                     const top = Math.min(y(Math.max(s, START)), y(END) - 22);
                     const h = Math.max((Math.min(en, END) - Math.max(s, START)) * PX, 22);
-                    const canMark = !!onToggleAbsence && e.date >= toISO(now) && e.date <= toISO(new Date(now.getFullYear(), now.getMonth(), now.getDate() + 6)) && !!e.studentId && e.type.startsWith('course');
-                    const canWeek = !!onAbsentWeek && canMark && e.date === toISO(now) && !e.absent;
+                    const canMark = !!onToggleAbsence && e.date >= toISO(mondayNow) && e.date <= toISO(now) && !!e.studentId && e.type.startsWith('course');
                     return (
                       <div
                         key={e.id}
                         onClick={() => onEditEvent(e)}
                         title={`${e.startTime} – ${e.endTime} · ${e.title}`}
-                        className={`absolute z-10 rounded-lg border px-1.5 py-0.5 text-[11px] leading-tight overflow-hidden cursor-pointer hover:shadow-md ${canWeek ? 'pr-12' : canMark ? 'pr-6' : ''} ${getEventStyle(e.type)}`}
+                        className={`absolute z-10 rounded-lg border px-1.5 py-0.5 text-[11px] leading-tight overflow-hidden cursor-pointer hover:shadow-md ${canMark ? 'pr-6' : ''} ${getEventStyle(e.type)}`}
                         style={{ top: top + 1, height: h - 2, left: `calc(${(lane / lanes) * 100}% + 2px)`, width: `calc(${100 / lanes}% - 4px)`, backgroundImage: e.absent ? HATCH : undefined }}
                       >
                         <div className="font-semibold">{e.startTime}–{e.endTime}</div>
@@ -303,15 +302,6 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
                             className="absolute top-0.5 right-0.5 p-0.5 rounded bg-white/80 hover:bg-white text-red-700"
                           >
                             <UserX className="w-3.5 h-3.5" />
-                          </button>
-                        )}
-                        {canWeek && (
-                          <button
-                            onClick={(ev) => { ev.stopPropagation(); onAbsentWeek!(e.studentId!); }}
-                            title="Déclarer absent sur 7 jours (semaine glissante)"
-                            className="absolute top-0.5 right-6 p-0.5 rounded bg-white/80 hover:bg-white text-red-700"
-                          >
-                            <CalendarX className="w-3.5 h-3.5" />
                           </button>
                         )}
                       </div>
