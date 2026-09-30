@@ -4,7 +4,7 @@ import {
   ArrowRight, CheckCircle2, ChevronRight, MessageSquare, UserX 
 } from 'lucide-react';
 import { Student, PedagogicalLog, ScheduleEvent, ContactInquiry } from '../../types';
-import { toISO, formatMinutes, HATCH } from '../../utils/schoolCalendar';
+import { toISO, formatMinutes, HATCH, absenceWindow } from '../../utils/schoolCalendar';
 
 interface DashboardViewProps {
   students: Student[];
@@ -68,6 +68,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
     ? `${weekMinutes / 60} h`
     : `${Math.floor(weekMinutes / 60)} h ${String(weekMinutes % 60).padStart(2, '0')}`;
 
+  const absWindow = absenceWindow(now);
   const totalAbsenceMinutes = students.reduce((sum, s) => sum + (s.absenceMinutes || 0), 0);
 
   // Événements à venir : ceux qui ne sont pas encore terminés (jour ET heure)
@@ -266,7 +267,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                     </div>
 
                     <div className="shrink-0 flex items-center gap-2">
-                      {evt.date === toISO(now) && evt.studentId && evt.type.startsWith('course') && (
+                      {evt.date >= absWindow.from && evt.date <= absWindow.to && evt.studentId && evt.type.startsWith('course') && (
                         <button
                           onClick={() => onToggleAbsence(evt.id)}
                           className={`px-2.5 py-1 text-xs font-medium rounded-lg border transition-colors ${evt.absent ? 'text-[#5A544D] bg-[#F2ECE3] border-[#D8D1C7]' : 'text-red-700 bg-white border-red-200 hover:bg-red-50'}`}

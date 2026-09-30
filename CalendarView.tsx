@@ -4,7 +4,7 @@ import {
   Clock, User, MapPin, Filter, UserX 
 } from 'lucide-react';
 import { ScheduleEvent, Student, EventType } from '../../types';
-import { dayOffReason, toISO, HATCH } from '../../utils/schoolCalendar';
+import { dayOffReason, toISO, HATCH, absenceWindow } from '../../utils/schoolCalendar';
 
 // Grille horaire fixe : 7h30 → 20h00
 const START = 7 * 60 + 30;
@@ -65,8 +65,7 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
     const t = setInterval(() => setNow(new Date()), 60000);
     return () => clearInterval(t);
   }, []);
-  // Lundi de la semaine courante (le bouton d'absence est disponible du lundi jusqu'à aujourd'hui)
-  const mondayNow = new Date(now.getFullYear(), now.getMonth(), now.getDate() - ((now.getDay() + 6) % 7));
+  const absWindow = absenceWindow(now);
   const [typeFilter, setTypeFilter] = useState<'all' | 'courses' | 'vacation' | 'absence'>('all');
 
   // Compute start of current week (Monday)
@@ -284,7 +283,7 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
                   {layout(dayEvents).map(({ e, s, en, lane, lanes }) => {
                     const top = Math.min(y(Math.max(s, START)), y(END) - 22);
                     const h = Math.max((Math.min(en, END) - Math.max(s, START)) * PX, 22);
-                    const canMark = !!onToggleAbsence && e.date >= toISO(mondayNow) && e.date <= toISO(now) && !!e.studentId && e.type.startsWith('course');
+                    const canMark = !!onToggleAbsence && e.date >= absWindow.from && e.date <= absWindow.to && !!e.studentId && e.type.startsWith('course');
                     return (
                       <div
                         key={e.id}
