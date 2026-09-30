@@ -87,7 +87,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 src={IMAGES.hero}
                 alt="Piano dans une salle de cours lumineuse"
                 referrerPolicy="no-referrer"
-                className="w-full aspect-[4/3] lg:aspect-[3/4] object-cover hover:scale-[1.02] transition-transform duration-700 ease-out"
+                className="w-full aspect-[4/3] lg:aspect-[4/5] object-cover hover:scale-[1.02] transition-transform duration-700 ease-out"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent pointer-events-none" />
               <div className="absolute bottom-5 left-5 right-5 text-white/95 pointer-events-none">

@@ -18,10 +18,11 @@ export const CoursesSection: React.FC<{ city?: string }> = ({ city }) => {
     <section id="cours" className="py-20 md:py-28 bg-[#FAF8F5]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-        <div className="max-w-3xl mb-16">
+        <div className="max-w-3xl mx-auto text-center mb-16">
           <div className="inline-flex items-center gap-2 text-xs font-semibold tracking-wider uppercase text-[#B0824B] mb-3">
             <span className="w-6 h-[1px] bg-[#B0824B]"></span>
             <span>Organisation & Fonctionnement</span>
+            <span className="w-6 h-[1px] bg-[#B0824B]"></span>
           </div>
           <h2 className="font-serif-display text-3xl sm:text-4xl lg:text-5xl text-[#1E1B18] font-normal tracking-tight text-balance">
             Comment se déroulent les cours au quotidien ?
@@ -31,48 +32,46 @@ export const CoursesSection: React.FC<{ city?: string }> = ({ city }) => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-stretch">
-
-          <div className="lg:col-span-5 flex flex-col">
-            <div className="rounded-2xl overflow-hidden border border-[#E8E2D8] bg-[#EFE9DF] shadow-md h-full flex flex-col justify-between">
-              <img
-                src={IMAGES.studentLesson}
-                alt="Séance de cours de piano particulier"
-                referrerPolicy="no-referrer"
-                className="w-full aspect-[4/3] object-cover"
-              />
-              <div className="p-6 bg-white flex-1 flex flex-col justify-between">
-                <div>
-                  <h3 className="font-serif-display text-xl text-[#1E1B18] mb-2 font-medium">
-                    La salle de piano & l'instrument
-                  </h3>
-                  <p className="text-sm text-[#5A544D] leading-relaxed">
-                    Les cours ont lieu sur un véritable piano acoustique, entretenu et accordé plusieurs fois par an, pour une sensibilité tactile et une palette de nuances incomparables.
-                  </p>
-                </div>
-                <div className="mt-4 pt-4 border-t border-[#F2ECE3] text-xs text-[#7A7369]">
-                  Salle de cours privée, calme et lumineuse à {city || '[Ville / Quartier]'}
-                </div>
-              </div>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center mb-16">
+          <div className="rounded-2xl overflow-hidden border border-[#E8E2D8] bg-[#EFE9DF] shadow-md">
+            <img
+              src={IMAGES.studentLesson}
+              alt="Séance de cours de piano particulier"
+              referrerPolicy="no-referrer"
+              className="w-full aspect-[4/3] object-cover"
+            />
+          </div>
+          <div className="space-y-4">
+            <h3 className="font-serif-display text-2xl sm:text-3xl text-[#1E1B18] font-medium">
+              La salle de piano & l'instrument
+            </h3>
+            <p className="text-base text-[#5A544D] leading-relaxed">
+              Les cours ont lieu sur un véritable piano acoustique, entretenu et accordé plusieurs fois par an, pour une sensibilité tactile et une palette de nuances incomparables.
+            </p>
+            <p className="text-base text-[#5A544D] leading-relaxed">
+              La salle de cours est privée, calme et lumineuse : un cadre propice à la concentration, où l'élève peut se consacrer pleinement à son travail.
+            </p>
+            <div className="pt-4 border-t border-[#E8E2D8] text-sm text-[#7A7369]">
+              Salle de cours à {city || '[Ville / Quartier]'}
             </div>
           </div>
-
-          <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-5">
-            {cards.map(({ icon: Icon, title, text, foot }) => (
-              <div key={title} className="p-6 bg-white rounded-xl border border-[#E8E2D8] flex flex-col justify-between hover:border-[#D5C7B0] transition-colors">
-                <div>
-                  <div className="w-9 h-9 rounded-lg bg-[#FAF3EA] text-[#B0824B] flex items-center justify-center mb-3">
-                    <Icon className="w-5 h-5" />
-                  </div>
-                  <h4 className="font-serif-display text-lg text-[#1E1B18] font-medium mb-2">{title}</h4>
-                  <p className="text-sm text-[#5A544D] leading-relaxed">{text}</p>
-                </div>
-                <div className="mt-4 pt-3 border-t border-[#F2ECE3] text-xs text-[#8A8275]">{foot}</div>
-              </div>
-            ))}
-          </div>
-
         </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {cards.map(({ icon: Icon, title, text, foot }) => (
+            <div key={title} className="p-6 bg-white rounded-xl border border-[#E8E2D8] flex flex-col justify-between hover:border-[#D5C7B0] transition-colors">
+              <div>
+                <div className="w-9 h-9 rounded-lg bg-[#FAF3EA] text-[#B0824B] flex items-center justify-center mb-3">
+                  <Icon className="w-5 h-5" />
+                </div>
+                <h4 className="font-serif-display text-lg text-[#1E1B18] font-medium mb-2">{title}</h4>
+                <p className="text-sm text-[#5A544D] leading-relaxed">{text}</p>
+              </div>
+              <div className="mt-4 pt-3 border-t border-[#F2ECE3] text-xs text-[#8A8275]">{foot}</div>
+            </div>
+          ))}
+        </div>
+
       </div>
     </section>
   );

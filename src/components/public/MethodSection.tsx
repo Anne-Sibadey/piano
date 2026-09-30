@@ -36,10 +36,11 @@ export const MethodSection: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Header Block */}
-        <div className="max-w-3xl mb-16">
+        <div className="max-w-3xl mx-auto text-center mb-16">
           <div className="inline-flex items-center gap-2 text-xs font-semibold tracking-wider uppercase text-[#B0824B] mb-3">
             <span className="w-6 h-[1px] bg-[#B0824B]"></span>
             <span>Philosophie d'enseignement</span>
+            <span className="w-6 h-[1px] bg-[#B0824B]"></span>
           </div>
           <h2 className="font-serif-display text-3xl sm:text-4xl lg:text-5xl text-[#1E1B18] font-normal tracking-tight text-balance">
             Un entre-deux exigeant : ni conservatoire, ni simple loisir
@@ -49,61 +50,53 @@ export const MethodSection: React.FC = () => {
           </p>
         </div>
 
-        {/* Narrative & Visual Split */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center mb-24">
-          
-          <div className="lg:col-span-6 space-y-6">
-            <div className="p-8 bg-white rounded-2xl border border-[#E8E2D8] shadow-sm">
-              <h3 className="font-serif-display text-2xl text-[#1E1B18] font-medium mb-3">
-                L’équilibre entre rigueur technique et liberté musicale
-              </h3>
-              <p className="text-sm sm:text-base text-[#5A544D] leading-relaxed mb-4">
-                La technique pianistique n'est pas une fin en soi : elle n'a d'intérêt que si elle vous donne la liberté d'exprimer une intention, une nuance, un sentiment. 
-              </p>
-              <p className="text-sm sm:text-base text-[#5A544D] leading-relaxed">
-                Plutôt que d'aligner des heures d'exercices mécaniques sans contexte, chaque geste technique est abordé directement à travers les œuvres que vous aimez, avec des clés concrètes pour libérer la respiration et la souplesse corporelle.
-              </p>
-            </div>
+        {/* Texte (colonne unique) + image */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center mb-24">
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="p-5 bg-white rounded-xl border border-[#E8E2D8]">
-                <div className="flex items-center gap-2.5 mb-2 text-[#1E1B18]">
+          <div className="space-y-5">
+            <h3 className="font-serif-display text-2xl sm:text-3xl text-[#1E1B18] font-medium">
+              L’équilibre entre rigueur technique et liberté musicale
+            </h3>
+            <p className="text-base text-[#5A544D] leading-relaxed">
+              La technique pianistique n'est pas une fin en soi : elle n'a d'intérêt que si elle vous donne la liberté d'exprimer une intention, une nuance, un sentiment.
+            </p>
+            <p className="text-base text-[#5A544D] leading-relaxed">
+              Plutôt que d'aligner des heures d'exercices mécaniques sans contexte, chaque geste technique est abordé directement à travers les œuvres que vous aimez, avec des clés concrètes pour libérer la respiration et la souplesse corporelle.
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-5 border-t border-[#E8E2D8]">
+              <div>
+                <div className="flex items-center gap-2.5 mb-1.5 text-[#1E1B18]">
                   <Ear className="w-4 h-4 text-[#B0824B]" />
                   <h4 className="font-medium text-sm">Développer l'écoute</h4>
                 </div>
-                <p className="text-xs text-[#6A635B] leading-relaxed">
+                <p className="text-sm text-[#6A635B] leading-relaxed">
                   Apprendre à entendre le silence, la couleur harmonique et la résonance de la corde.
                 </p>
               </div>
-
-              <div className="p-5 bg-white rounded-xl border border-[#E8E2D8]">
-                <div className="flex items-center gap-2.5 mb-2 text-[#1E1B18]">
+              <div>
+                <div className="flex items-center gap-2.5 mb-1.5 text-[#1E1B18]">
                   <Sparkles className="w-4 h-4 text-[#B0824B]" />
                   <h4 className="font-medium text-sm">L'interprétation avant tout</h4>
                 </div>
-                <p className="text-xs text-[#6A635B] leading-relaxed">
+                <p className="text-sm text-[#6A635B] leading-relaxed">
                   Comprendre l'histoire du compositeur et faire chanter la ligne mélodique avec votre propre sensibilité.
                 </p>
               </div>
             </div>
           </div>
 
-          <div className="lg:col-span-6">
-            <div className="relative rounded-2xl overflow-hidden border border-[#E8E2D8] shadow-md bg-[#FAF8F5]">
-              <img
-                src={IMAGES.handsKeys}
-                alt="Mains sur le clavier et partitions de piano"
-                referrerPolicy="no-referrer"
-                className="w-full aspect-[4/3] object-cover"
-              />
-              <div className="p-6 bg-white border-t border-[#E8E2D8]">
-                <blockquote className="font-serif-display text-lg text-[#1E1B18] italic leading-snug">
-                  « Le piano n'est pas un meuble d'exercices, c'est un orchestre sous dix doigts. Le secret réside dans le plaisir de la résonance. »
-                </blockquote>
-                <p className="text-xs text-[#8A8275] mt-2">
-                  — Ma conception de l'enseignement
-                </p>
-              </div>
+          <div className="rounded-2xl overflow-hidden border border-[#E8E2D8] shadow-md bg-white">
+            <img
+              src={IMAGES.handsKeys}
+              alt="Mains sur le clavier et partitions de piano"
+              referrerPolicy="no-referrer"
+              className="w-full aspect-[4/3] object-cover"
+            />
+            <div className="p-6 border-t border-[#E8E2D8]">
+              <blockquote className="font-serif-display text-lg text-[#1E1B18] italic leading-snug">
+                « Le piano n'est pas un meuble d'exercices, c'est un orchestre sous dix doigts. Le secret réside dans le plaisir de la résonance. »
+              </blockquote>
+              <p className="text-xs text-[#8A8275] mt-2">— Ma conception de l'enseignement</p>
             </div>
           </div>
 
@@ -120,11 +113,11 @@ export const MethodSection: React.FC = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {targetAudiences.map((aud) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-6">
+            {targetAudiences.map((aud, i) => (
               <div
                 key={aud.title}
-                className="p-6 bg-white rounded-xl border border-[#E8E2D8] flex flex-col justify-between hover:shadow-sm transition-all"
+                className={`lg:col-span-2 ${i === 3 ? 'lg:col-start-2' : ''} ${i === 4 ? 'md:col-span-2 md:w-[calc(50%-0.75rem)] md:justify-self-center lg:w-auto lg:justify-self-auto' : ''} p-6 bg-white rounded-xl border border-[#E8E2D8] flex flex-col justify-between hover:shadow-sm transition-all`}
               >
                 <div>
                   <div className="text-xs font-medium text-[#7A7369] mb-2">

@@ -77,10 +77,11 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
-        <div className="max-w-3xl mb-16">
+        <div className="max-w-3xl mx-auto text-center mb-16">
           <div className="inline-flex items-center gap-2 text-xs font-semibold tracking-wider uppercase text-[#B0824B] mb-3">
             <span className="w-6 h-[1px] bg-[#B0824B]"></span>
             <span>Premier contact & Inscription</span>
+            <span className="w-6 h-[1px] bg-[#B0824B]"></span>
           </div>
           <h2 className="font-serif-display text-3xl sm:text-4xl lg:text-5xl text-[#1E1B18] font-normal tracking-tight text-balance">
             Prenons contact pour échanger sur vos envies
