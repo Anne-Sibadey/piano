@@ -1,12 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  getStoredStudents, saveStudents,
-  getStoredLogs, saveLogs,
-  getStoredSchedule, saveSchedule,
-  getStoredInquiries, saveInquiries,
-  getStoredSettings, saveSettings,
-  checkIsAdminAuthenticated, setAdminAuthenticated
-} from './utils/storage';
+import { supabase } from './utils/supabase';
+import { loadPublicSettings, loadPrivateData, saveKey, insertInquiry, updateInquiry } from './utils/storage';
+import { initialTeacherSettings } from './data/initialData';
 import { 
   Student, PedagogicalLog, ScheduleEvent, 
   ContactInquiry, TeacherSettings 
@@ -40,14 +35,14 @@ import { SettingsView } from './components/admin/SettingsView';
 
 export default function App() {
   // Persistence state
-  const [students, setStudents] = useState<Student[]>(getStoredStudents);
-  const [logs, setLogs] = useState<PedagogicalLog[]>(getStoredLogs);
-  const [scheduleEvents, setScheduleEvents] = useState<ScheduleEvent[]>(getStoredSchedule);
-  const [inquiries, setInquiries] = useState<ContactInquiry[]>(getStoredInquiries);
-  const [settings, setSettings] = useState<TeacherSettings>(getStoredSettings);
+  const [students, setStudents] = useState<Student[]>([]);
+  const [logs, setLogs] = useState<PedagogicalLog[]>([]);
+  const [scheduleEvents, setScheduleEvents] = useState<ScheduleEvent[]>([]);
+  const [inquiries, setInquiries] = useState<ContactInquiry[]>([]);
+  const [settings, setSettings] = useState<TeacherSettings>(initialTeacherSettings);
 
   // Authentication & View Mode
-  const [isAdminLoggedIn, setIsAdminLoggedIn] = useState<boolean>(checkIsAdminAuthenticated);
+  const [isAdminLoggedIn, setIsAdminLoggedIn] = useState<boolean>(false);
   const [isAdminView, setIsAdminView] = useState<boolean>(false);
   const [adminTab, setAdminTab] = useState<AdminTab>('dashboard');
   const [adminLoginModalOpen, setAdminLoginModalOpen] = useState(false);
@@ -71,26 +66,40 @@ export default function App() {
   const [preselectedFormula, setPreselectedFormula] = useState<string | undefined>(undefined);
   const [activeSection, setActiveSection] = useState('accueil');
 
-  // Sync state to local storage
-  useEffect(() => {
-    saveStudents(students);
-  }, [students]);
+  // Connexion + chargement des données (Supabase)
+  const [dataLoaded, setDataLoaded] = useState(false);
+  const [syncError, setSyncError] = useState(false);
 
   useEffect(() => {
-    saveLogs(logs);
-  }, [logs]);
+    loadPublicSettings().then((st) => { if (st) setSettings(st); });
+    supabase.auth.getSession().then(({ data }) => { if (data.session) setIsAdminLoggedIn(true); });
+    const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
+      setIsAdminLoggedIn(!!session);
+      if (!session) { setDataLoaded(false); setIsAdminView(false); }
+    });
+    return () => sub.subscription.unsubscribe();
+  }, []);
 
   useEffect(() => {
-    saveSchedule(scheduleEvents);
-  }, [scheduleEvents]);
+    if (!isAdminLoggedIn) return;
+    loadPrivateData()
+      .then((d) => {
+        if (d.students) setStudents(d.students);
+        if (d.logs) setLogs(d.logs);
+        if (d.schedule) setScheduleEvents(d.schedule);
+        if (d.settings) setSettings(d.settings);
+        setInquiries(d.inquiries);
+        setDataLoaded(true);
+      })
+      .catch((e) => { console.error(e); setSyncError(true); });
+  }, [isAdminLoggedIn]);
 
-  useEffect(() => {
-    saveInquiries(inquiries);
-  }, [inquiries]);
-
-  useEffect(() => {
-    saveSettings(settings);
-  }, [settings]);
+  // Enregistrement automatique (uniquement une fois les données chargées)
+  const persist = async (key: string, value: unknown) => setSyncError(!(await saveKey(key, value)));
+  useEffect(() => { if (dataLoaded) persist('students', students); }, [students, dataLoaded]);
+  useEffect(() => { if (dataLoaded) persist('logs', logs); }, [logs, dataLoaded]);
+  useEffect(() => { if (dataLoaded) persist('schedule', scheduleEvents); }, [scheduleEvents, dataLoaded]);
+  useEffect(() => { if (dataLoaded) persist('settings', settings); }, [settings, dataLoaded]);
 
   // Handle intersection observer for public nav
   useEffect(() => {
@@ -116,14 +125,13 @@ export default function App() {
   // Auth handlers
   const handleAdminLoginSuccess = () => {
     setIsAdminLoggedIn(true);
-    setAdminAuthenticated(true);
     setAdminLoginModalOpen(false);
     setIsAdminView(true);
   };
 
   const handleAdminLogout = () => {
+    supabase.auth.signOut();
     setIsAdminLoggedIn(false);
-    setAdminAuthenticated(false);
     setIsAdminView(false);
   };
 
@@ -172,10 +180,13 @@ export default function App() {
 
   // Inquiry operations
   const handleNewPublicInquiry = (inq: ContactInquiry) => {
+    insertInquiry(inq);
     setInquiries(prev => [inq, ...prev]);
   };
 
   const handleUpdateInquiryStatus = (id: string, status: ContactInquiry['status']) => {
+    const target = inquiries.find(i => i.id === id);
+    if (target) updateInquiry({ ...target, status });
     setInquiries(prev => prev.map(i => i.id === id ? { ...i, status } : i));
   };
 
@@ -221,6 +232,11 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-[#FAF8F5] text-[#1E1B18] font-sans">
+      {syncError && (
+        <div className="fixed top-0 inset-x-0 z-[60] bg-red-600 text-white text-xs text-center py-2">
+          Erreur de synchronisation avec la base de données : vos dernières modifications peuvent ne pas être enregistrées.
+        </div>
+      )}
       
       {/* Conditionally render Admin Panel or Public Showcase */}
       {isAdminView && isAdminLoggedIn ? (

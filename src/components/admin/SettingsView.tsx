@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Save, CheckCircle2, DollarSign, User, ShieldCheck } from 'lucide-react';
 import { TeacherSettings } from '../../types';
-import { getAdminPin, setAdminPin } from '../../utils/storage';
 
 interface SettingsViewProps {
   settings: TeacherSettings;
@@ -13,7 +12,6 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
   onSaveSettings
 }) => {
   const [formData, setFormData] = useState<TeacherSettings>({ ...settings });
-  const [pin, setPin] = useState(getAdminPin());
   const [savedSuccess, setSavedSuccess] = useState(false);
 
   const handlePriceChange = (formulaId: string, newPrice: string) => {
@@ -28,9 +26,6 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSaveSettings(formData);
-    if (pin.trim()) {
-      setAdminPin(pin.trim());
-    }
     setSavedSuccess(true);
     setTimeout(() => setSavedSuccess(false), 3000);
   };
@@ -218,31 +213,6 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
               className="w-full px-3.5 py-2 text-sm bg-[#FAF8F5] border border-[#D8D1C7] rounded-xl resize-none"
             />
           </div>
-        </div>
-      </div>
-
-      {/* Security & Access PIN */}
-      <div className="p-6 bg-white rounded-2xl border border-[#E8E2D8] shadow-sm space-y-4">
-        <div className="flex items-center gap-2 text-[#1E1B18]">
-          <ShieldCheck className="w-5 h-5 text-[#B0824B]" />
-          <h3 className="font-serif-display text-xl font-medium">
-            Sécurité & Mot de passe Espace Enseignant
-          </h3>
-        </div>
-
-        <div className="max-w-xs">
-          <label className="block text-xs font-medium text-[#3A3530] mb-1">
-            Mot de passe d'accès administrateur
-          </label>
-          <input
-            type="text"
-            value={pin}
-            onChange={(e) => setPin(e.target.value)}
-            className="w-full px-3.5 py-2 text-sm bg-[#FAF8F5] border border-[#D8D1C7] rounded-xl font-mono"
-          />
-          <p className="text-[11px] text-[#8A8275] mt-1">
-            Par défaut : <code>piano2026</code>
-          </p>
         </div>
       </div>
 
