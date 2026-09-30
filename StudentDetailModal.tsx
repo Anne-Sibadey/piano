@@ -143,7 +143,7 @@ export const StudentDetailModal: React.FC<StudentDetailModalProps> = ({
                     <span>Paiement & Tarif</span>
                   </div>
                   <div className="font-medium text-sm text-[#1E1B18]">
-                    Tarif annuel : {student.pricePerYear || '[À renseigner]'}
+                    Tarif de la séance : {student.pricePerYear || '[À renseigner]'}
                   </div>
                   <div className="flex items-center gap-1.5 text-[11px] mt-0.5">
                     <span className={`inline-block w-2 h-2 rounded-full ${

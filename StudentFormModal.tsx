@@ -423,7 +423,7 @@ export const StudentFormModal: React.FC<StudentFormModalProps> = ({
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div>
                 <label className="block text-xs font-medium text-[#3A3530] mb-1">
-                  Tarif annuel convenu
+                  Tarif de la séance convenu
                 </label>
                 <input
                   type="text"
