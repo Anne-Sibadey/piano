@@ -1,7 +1,7 @@
 import React from 'react';
 import { 
   MessageSquare, UserPlus, Mail, Phone, Clock, 
-  Check, Archive, CheckCircle2 
+  Check, Archive, CheckCircle2, Trash2 
 } from 'lucide-react';
 import { ContactInquiry, Student } from '../../types';
 
@@ -9,12 +9,14 @@ interface InquiriesViewProps {
   inquiries: ContactInquiry[];
   onUpdateStatus: (inquiryId: string, status: ContactInquiry['status']) => void;
   onConvertToStudent: (inquiry: ContactInquiry) => void;
+  onDelete: (inquiryId: string) => void;
 }
 
 export const InquiriesView: React.FC<InquiriesViewProps> = ({
   inquiries,
   onUpdateStatus,
-  onConvertToStudent
+  onConvertToStudent,
+  onDelete
 }) => {
   const sortedInquiries = [...inquiries].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
 
@@ -128,6 +130,14 @@ export const InquiriesView: React.FC<InquiriesViewProps> = ({
                       Archiver
                     </button>
                   )}
+
+                  <button
+                    onClick={() => onDelete(inq.id)}
+                    className="inline-flex items-center gap-1 px-3 py-1.5 text-xs text-red-700 hover:bg-red-50 rounded-lg transition-colors"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                    <span>Supprimer</span>
+                  </button>
                 </div>
 
                 <button

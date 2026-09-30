@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from './utils/supabase';
-import { loadPublicSettings, loadPrivateData, saveKey, insertInquiry, updateInquiry } from './utils/storage';
+import { loadPublicSettings, loadPrivateData, saveKey, insertInquiry, updateInquiry, deleteInquiry } from './utils/storage';
 import { initialTeacherSettings } from './data/initialData';
 import { generateYear, toISO } from './utils/schoolCalendar';
 import { 
@@ -198,6 +198,15 @@ export default function App() {
     setInquiries(prev => prev.map(i => i.id === id ? { ...i, status } : i));
   };
 
+  const handleDeleteInquiry = async (id: string) => {
+    if (!window.confirm('Supprimer définitivement cette demande de contact ? Cette action est irréversible.')) return;
+    if (await deleteInquiry(id)) {
+      setInquiries(prev => prev.filter(i => i.id !== id));
+    } else {
+      window.alert("La suppression a échoué. Vérifiez votre connexion et réessayez.");
+    }
+  };
+
   const handleConvertInquiryToStudent = (inquiry: ContactInquiry) => {
     // Open student form modal pre-filled with inquiry details
     const formulaKey = inquiry.formula.includes('30') ? '30min' : inquiry.formula.includes('60') || inquiry.formula.includes('heure') ? '60min' : '45min';
@@ -334,6 +343,7 @@ export default function App() {
             <InquiriesView
               inquiries={inquiries}
               onUpdateStatus={handleUpdateInquiryStatus}
+              onDelete={handleDeleteInquiry}
               onConvertToStudent={handleConvertInquiryToStudent}
             />
           )}

@@ -53,3 +53,10 @@ export const updateInquiry = async (inq: ContactInquiry): Promise<boolean> => {
   if (error) console.error(error);
   return !error;
 };
+
+// Professeur : supprime définitivement une demande de contact.
+export const deleteInquiry = async (id: string): Promise<boolean> => {
+  const { data, error } = await supabase.from('inquiries').delete().eq('id', id).select('id');
+  if (error) console.error(error);
+  return !error && !!data && data.length > 0;
+};
